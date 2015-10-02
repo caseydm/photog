@@ -5,7 +5,8 @@ from flask import (
     flash,
     redirect,
     render_template,
-    request, session,
+    request,
+    session,
     url_for
 )
 from flask.ext.stormpath import (
