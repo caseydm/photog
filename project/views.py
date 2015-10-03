@@ -1,24 +1,13 @@
 # project/views.py
 
-from flask import (
-    Flask,
-    flash,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for
-)
-from flask.ext.stormpath import (
-    StormpathManager,
-    login_required,
-    user,
-    User
-)
-from forms import RegistrationForm
+import uuid
+from flask import Flask, redirect, render_template, \
+    request, url_for, flash
+from flask.ext.stormpath import StormpathManager, login_required, user, User
 from stormpath.error import Error as StormpathError
 from flask.ext.login import login_user
-import uuid
+from flask.ext.sqlalchemy import SQLAlchemy
+from forms import RegistrationForm, AddContactForm
 
 
 # config
@@ -26,19 +15,44 @@ app = Flask(__name__, instance_relative_config=True)
 app.config.from_object('config')
 app.config.from_pyfile('config.py')
 stormpath_manager = StormpathManager(app)
+db = SQLAlchemy(app)
+
+from models import Contact
 
 
+# index
 @app.route('/')
 def index():
     return render_template('index.html')
 
 
+# dashboard
 @app.route('/dashboard/')
 @login_required
 def dashboard():
     return render_template('dashboard.html', user=user)
 
 
+# new contact
+@app.route('/new_contact/', methods=['GET', 'POST'])
+@login_required
+def new_contact():
+    form = AddContactForm(request.form)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_contact = Contact(
+                form.name.data,
+                form.email.data,
+                user.username,
+                user.custom_data['tenant_id']
+            )
+        db.session.add(new_contact)
+        db.session.commit()
+        return redirect(url_for('dashboard'))
+    return render_template('new_contact.html', form=form)
+
+
+# register
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """

@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
 from wtforms.fields import PasswordField, StringField
-from wtforms.validators import InputRequired
+from wtforms.validators import InputRequired, DataRequired
 
 
 class RegistrationForm(Form):
@@ -13,3 +13,11 @@ class RegistrationForm(Form):
     surname = StringField('Last Name')
     email = StringField('Email', validators=[InputRequired()])
     password = PasswordField('Password', validators=[InputRequired()])
+
+
+class AddContactForm(Form):
+    """
+    Add a contact
+    """
+    name = StringField('Name:', validators=[DataRequired()])
+    email = StringField('Email:', validators=[DataRequired()])
