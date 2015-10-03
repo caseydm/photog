@@ -26,13 +26,21 @@ db = SQLAlchemy(app)
 from models import Contact
 
 
+################
+# static pages #
+################
+
 # index
 @app.route('/')
 def index():
     return render_template('index.html')
 
 
-# dashboard
+#############
+# dashboard #
+#############
+
+# dashboard home
 @app.route('/dashboard/')
 @login_required
 def dashboard():
@@ -45,6 +53,9 @@ def dashboard():
 @app.route('/new_contact/', methods=['GET', 'POST'])
 @login_required
 def new_contact():
+    """
+    Add new contact
+    """
     form = AddContactForm(request.form)
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -59,6 +70,10 @@ def new_contact():
         return redirect(url_for('dashboard'))
     return render_template('new_contact.html', form=form)
 
+
+###################
+# user management #
+###################
 
 # register
 @app.route('/register', methods=['GET', 'POST'])
@@ -124,8 +139,6 @@ def register():
                 # Flask-Login), then redirect the user to the
                 # STORMPATH_REDIRECT_URL setting.
                 login_user(account, remember=True)
-                # user.custom_data['tenant_id'] = tenant_id
-                # user.save()
 
                 if 'STORMPATH_REGISTRATION_REDIRECT_URL'\
                         in app.config:

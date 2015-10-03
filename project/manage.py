@@ -1,3 +1,6 @@
+# project/manage.py 
+# flask-migrate (albemic) configuration
+
 from flask.ext.migrate import Migrate, MigrateCommand
 from flask.ext.script import Manager
 
