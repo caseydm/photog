@@ -7,3 +7,8 @@ Your tenant ID: {{ user.custom_data['tenant_id'] }}
 <a href="/logout">Logout</a>
 <br>
 <a href="/new_contact/">New Contact</a>
+<br>
+{% for contact in contacts %}
+    <p>{{ contact.name }}</p>
+    <p>{{ contact.email }}</p>
+{% endfor %}

@@ -3,6 +3,7 @@
 from views import db
 
 
+# Contact model
 class Contact(db.Model):
 
     __tablename__ = 'contacts'

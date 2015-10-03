@@ -30,7 +30,9 @@ def index():
 @app.route('/dashboard/')
 @login_required
 def dashboard():
-    return render_template('dashboard.html', user=user)
+    contacts = db.session.query(Contact).filter_by(
+        tenant_id=user.custom_data['tenant_id']).order_by(Contact.name.asc())
+    return render_template('dashboard.html', user=user, contacts=contacts)
 
 
 # new contact
