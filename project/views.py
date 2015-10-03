@@ -10,11 +10,17 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from forms import RegistrationForm, AddContactForm
 
 
-# config
+# app setup
 app = Flask(__name__, instance_relative_config=True)
+
+# app conig
 app.config.from_object('config')
 app.config.from_pyfile('config.py')
+
+# stormpath setup
 stormpath_manager = StormpathManager(app)
+
+# database setup
 db = SQLAlchemy(app)
 
 from models import Contact
