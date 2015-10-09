@@ -72,7 +72,7 @@ def new_contact():
 
 
 ###################
-# user management #
+# accounts #
 ###################
 
 # register
