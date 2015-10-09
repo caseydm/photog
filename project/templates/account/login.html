@@ -3,48 +3,56 @@
 {% block title %}Sign In{% endblock %}
 
 {% block content %}
-
 <body class="theme-default page-signin-alt">
     
-    <!-- 2. $MAIN_NAVIGATION ===========================================================================
-
-        Main navigation
-    -->
+    <!-- Top Nav -->
     <div class="signin-header">
         <a href="index.html" class="logo">
             <strong>Photog</strong>App
         </a> <!-- / .logo -->
-        <a href="{{ url_for('register') }}" class="btn btn-primary">Register</a>
+        <a href="{{ url_for('register') }}" class="btn btn-primary">Sign Up</a>
     </div> <!-- / .header -->
+    <!-- / Top Nav -->
 
-    <h1 class="form-header">Sign in to your Account</h1>
+    <!-- Page Header -->
+    <br/>
+    <h1 class="form-header">Log in to your Account</h1>
+    <!-- / Page Header -->
 
-    <!-- Form -->
-    <form class="panel" method="post">
-        {{ form.hidden_tag() }}
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-              <div class="alert alert-danger">
-                {% for message in messages %}
-                  {{ message }}
-                {% endfor %}
-              </div>
-            {% endif %}
-        {% endwith %}
-        <div class="form-group">
-            {{ form.login(class='form-control input-lg', placeholder='Email', required='true') }}
-        </div> <!-- / Email -->
+    <div class="panel">
+        <!-- Form -->
+        <form method="post">
+            {{ form.hidden_tag() }}
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                  <div class="alert alert-danger">
+                    {% for message in messages %}
+                      {{ message }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+            {% endwith %}
+            <div class="form-group">
+                {{ form.login(class='form-control input-lg', placeholder='Email', required='true') }}
+            </div> <!-- / Email -->
 
-        <div class="form-group signin-password">
-            {{ form.password(class='form-control input-lg', placeholder='Password', required='true') }}
-        </div> <!-- / Password -->
+            <div class="form-group signin-password">
+                {{ form.password(class='form-control input-lg', placeholder='Password', required='true') }}
+            </div> <!-- / Password -->
 
-        <div class="form-actions">
-            <input type="submit" value="Sign In" class="btn btn-primary btn-block btn-lg">
-        </div> <!-- / .form-actions -->
-    </form>
-    <!-- / Form -->
-
+            <div class="form-actions">
+                <input type="submit" value="Log In" class="btn btn-primary btn-block btn-lg">
+            </div> <!-- / .form-actions -->
+        </form>
+        <!-- / Form -->
+        <div class="text-center-sm" style="margin-top: 20px;">
+            <a href="/forgot">Forgot your password?</a>
+        </div>
+        <!--
+        <hr>
+        <a href="{{ url_for('register') }}"><button class="btn btn-block btn-lg">Sign Up</button></a>
+        -->
+    </div>
+    
 </body>
-
 {% endblock %}
