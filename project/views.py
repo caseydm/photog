@@ -46,7 +46,7 @@ def index():
 def dashboard():
     contacts = db.session.query(Contact).filter_by(
         tenant_id=user.custom_data['tenant_id']).order_by(Contact.name.asc())
-    return render_template('dashboard.html', user=user, contacts=contacts)
+    return render_template('dashboard/dashboard.html', user=user, contacts=contacts)
 
 
 # new contact
