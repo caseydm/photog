@@ -152,6 +152,6 @@ def register():
                 flash(err.message.get('message'))
 
     return render_template(
-        'register.html',
+        'account/register.html',
         form=form,
     )

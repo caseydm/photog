@@ -1,0 +1,52 @@
+{% extends 'account/base.html' %}
+
+{% block content %}
+
+<body class="theme-default page-signup-alt">
+
+    <!-- 2. $MAIN_NAVIGATION ===========================================================================
+
+        Main navigation
+    -->
+    <div class="signup-header">
+        <a href="index.html" class="logo">
+            <strong>Photog</strong>App
+        </a> <!-- / .logo -->
+        <a href="{{ url_for('register') }}" class="btn btn-primary">Sign Up</a>
+    </div> <!-- / .header -->
+
+    <h1 class="form-header">Register for an Account</h1>
+
+    <!-- Form -->
+    <form action="index.html" id="signup-form_id" class="panel">
+        <div class="form-group">
+            <input type="text" name="signup_name" id="name_id" class="form-control input-lg" placeholder="Full name">
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="signup_email" id="email_id" class="form-control input-lg" placeholder="E-mail">
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="signup_username" id="username_id" class="form-control input-lg" placeholder="Username">
+        </div>
+
+        <div class="form-group">
+            <input type="password" name="signup_password" id="password_id" class="form-control input-lg" placeholder="Password">
+        </div>
+
+        <div class="form-group" style="margin-top: 20px;margin-bottom: 20px;">
+            <label class="checkbox-inline">
+                <input type="checkbox" name="signup_confirm" class="px" id="confirm_id">
+                <span class="lbl">I agree with the <a href="#" target="_blank">Terms and Conditions</a></span>
+            </label>
+        </div>
+
+        <div class="form-actions">
+            <input type="submit" value="Create an account" class="btn btn-primary btn-lg btn-block">
+        </div>
+    </form>
+    <!-- / Form -->
+
+
+{% endblock %}
