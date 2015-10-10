@@ -7,7 +7,7 @@ from flask.ext.stormpath import StormpathManager, login_required, user, User
 from stormpath.error import Error as StormpathError
 from flask.ext.login import login_user
 from flask.ext.sqlalchemy import SQLAlchemy
-from forms import RegistrationForm, AddContactForm
+from forms import RegistrationForm, AddContactForm, AddUserForm
 
 
 # app setup
@@ -162,3 +162,28 @@ def register():
         'account/register.html',
         form=form,
     )
+
+
+@app.route('/add_user', methods=['GET', 'POST'])
+@login_required
+def add_user():
+    """
+    Add a user to an account
+    """
+    form = AddUserForm()
+
+    if form.validate_on_submit():
+        try:
+            data = form.data
+            tenant_id = user.custom_data['tenant_id']
+
+            data['given_name'] = 'Anonymous'
+            data['surname'] = 'Anonymous'
+            data['custom_data'] = {"tenant_id": tenant_id}
+            data['password'] = 'Watchout1!'
+
+            User.create(**data)
+            flash('Account created')
+        except StormpathError as err:
+                flash(err.message.get('message'))
+    return render_template('dashboard/add_user.html', form=form)

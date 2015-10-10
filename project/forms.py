@@ -21,3 +21,10 @@ class AddContactForm(Form):
     """
     name = StringField('Name:', validators=[DataRequired()])
     email = StringField('Email:', validators=[DataRequired()])
+
+
+class AddUserForm(Form):
+    """
+    Add a user to an account
+    """
+    email = StringField('Email', validators=[DataRequired()])
