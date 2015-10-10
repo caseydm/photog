@@ -4,15 +4,27 @@
 
 {% block content %}
 <div class="page-header">
-    <h1><span class="text-light-gray">User / </span>Account</h1>
+    <h1>Account</h1>
 </div>
 
 <div class="panel colourable">
     <div class="panel-heading">
-        <span class="panel-title">Account settings for {{ user.email }}</span>
+        <span class="panel-title">Profile - {{ user.email }}</span>
     </div>
     <div class="panel-body">
-        Name: 
+        <p><b>Name:</b> <a href="#">Set Name</a></p>
+        <p><b>Email:</b> {{ user.email }}</p>
+        <p><a href="#">Reset Password</a></p> 
+    </div>
+</div>
+
+<div class="panel colourable">
+    <div class="panel-heading">
+        <span class="panel-title">Team Members</span>
+    </div>
+    <div class="panel-body">
+        <p><b>Site admin:</b> {{ user.email }}</p><br>
+        <p><a href="#"><button class="btn btn-info">Add Team Member</button></a></p>
     </div>
 </div>
 {% endblock %}
