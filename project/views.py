@@ -49,6 +49,13 @@ def dashboard():
     return render_template('dashboard/dashboard.html', user=user, contacts=contacts)
 
 
+# profile
+@app.route('/account/')
+@login_required
+def account():
+    return render_template('dashboard/account.html', user=user)
+
+
 # new contact
 @app.route('/new_contact/', methods=['GET', 'POST'])
 @login_required

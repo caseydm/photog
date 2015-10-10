@@ -1,0 +1,18 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Profile - {{ user.email }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><span class="text-light-gray">User / </span>Account</h1>
+</div>
+
+<div class="panel colourable">
+    <div class="panel-heading">
+        <span class="panel-title">Account settings for {{ user.email }}</span>
+    </div>
+    <div class="panel-body">
+        Name: 
+    </div>
+</div>
+{% endblock %}

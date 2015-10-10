@@ -22,34 +22,16 @@
 
             <div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
                 <div>
-                    <ul class="nav navbar-nav">
-                        <li>
-                            <a href="#">Home</a>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">First item</a></li>
-                                <li><a href="#">Second item</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#">Third item</a></li>
-                            </ul>
-                        </li>
-                    </ul> <!-- / .navbar-nav -->
-
                     <div class="right clearfix">
                         <ul class="nav navbar-nav pull-right right-navbar-nav">
-
-
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle user-menu" data-toggle="dropdown">
                                     <img src="/static/img/avatars/1.jpg" alt="">
                                     <span>{{ user.email }}</span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#">Profile <span class="label label-warning pull-right">new</span></a></li>
-                                    <li><a href="#">Account <span class="badge badge-primary pull-right">new</span></a></li>
-                                    <li><a href="#"><i class="dropdown-icon fa fa-cog"></i>&nbsp;&nbsp;Settings</a></li>
+                                    <li><a href="{{ url_for('account') }}"><i class="dropdown-icon fa fa-cog"></i>&nbsp;&nbsp;Account</a></li>
+                                    <li><a href="#"><i class="dropdown-icon fa fa-plus"></i>&nbsp;&nbsp;Add User</a></li>
                                     <li class="divider"></li>
                                     <li><a href="/logout"><i class="dropdown-icon fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
                                 </ul>
