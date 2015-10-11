@@ -1,6 +1,6 @@
 # project/views.py
 
-import uuid
+import uuid, random
 from flask import Flask, redirect, render_template, \
     request, url_for, flash, current_app
 from flask.ext.stormpath import StormpathManager, login_required, \
@@ -82,6 +82,26 @@ def new_contact():
 ###################
 # accounts #
 ###################
+
+# random password function
+def create_password():
+    alphabet = "abcdefghijklmnopqrstuvwxyz"
+    upperalphabet = alphabet.upper()
+    pw_len = 20
+    pwlist = []
+
+    for i in range(pw_len//3):
+        pwlist.append(alphabet[random.randrange(len(alphabet))])
+        pwlist.append(upperalphabet[random.randrange(len(upperalphabet))])
+        pwlist.append(str(random.randrange(10)))
+    for i in range(pw_len-len(pwlist)):
+        pwlist.append(alphabet[random.randrange(len(alphabet))])
+
+    random.shuffle(pwlist)
+    pwstring = "".join(pwlist)
+
+    return(pwstring)
+
 
 # register
 @app.route('/register', methods=['GET', 'POST'])
@@ -197,7 +217,9 @@ def add_user():
                 'tenant_id': tenant_id,
                 'site_admin': 'False'
             }
-            data['password'] = 'Watchout1!'
+
+            # generate password
+            data['password'] = create_password()
 
             # create account
             account = User.create(**data)
