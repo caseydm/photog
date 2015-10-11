@@ -2,8 +2,9 @@
 
 import uuid
 from flask import Flask, redirect, render_template, \
-    request, url_for, flash
-from flask.ext.stormpath import StormpathManager, login_required, user, User
+    request, url_for, flash, current_app
+from flask.ext.stormpath import StormpathManager, login_required, \
+    groups_required, user, User
 from stormpath.error import Error as StormpathError
 from flask.ext.login import login_user
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -128,7 +129,10 @@ def register():
 
                 # create a tenant ID
                 tenant_id = str(uuid.uuid4())
-                data['custom_data'] = {"tenant_id": tenant_id}
+                data['custom_data'] = {
+                    'tenant_id': tenant_id,
+                    'site_admin': 'True'
+                }
 
                 # Create the user account on Stormpath.  If this fails, an
                 # exception will be raised.
@@ -136,10 +140,14 @@ def register():
 
                 # create a new stormpath group
                 directory = stormpath_manager.application.default_account_store_mapping.account_store
-                tenant_group = directory.groups.create({'name': tenant_id})
+                tenant_group = directory.groups.create({
+                    'name': tenant_id,
+                    'description': data['email']
+                })
 
                 # assign new user to the newly created group
                 account.add_group(tenant_group)
+                account.add_group('site_admin')
 
                 # If we're able to successfully create the user's account,
                 # we'll log the user in (creating a secure session using
@@ -166,6 +174,7 @@ def register():
 
 @app.route('/add_user', methods=['GET', 'POST'])
 @login_required
+@groups_required(['site_admin'])
 def add_user():
     """
     Add a user to an account
@@ -175,14 +184,31 @@ def add_user():
     if form.validate_on_submit():
         try:
             data = form.data
+
+            # set tenant id to same as current logged in user
             tenant_id = user.custom_data['tenant_id']
 
+            # given_name and surname are required fields
             data['given_name'] = 'Anonymous'
             data['surname'] = 'Anonymous'
-            data['custom_data'] = {"tenant_id": tenant_id}
+
+            # set tenant id and site_admin status
+            data['custom_data'] = {
+                'tenant_id': tenant_id,
+                'site_admin': 'False'
+            }
             data['password'] = 'Watchout1!'
 
-            User.create(**data)
+            # create account
+            account = User.create(**data)
+
+            # add user to tenant group
+            account.add_group(tenant_id)
+
+            # send password reset email
+            current_app.stormpath_manager.application.send_password_reset_email('caseym@gmail.com')
+
+            # flash or redirect
             flash('Account created')
         except StormpathError as err:
                 flash(err.message.get('message'))

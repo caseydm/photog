@@ -1,12 +1,10 @@
 {% extends 'account/base.html' %}
 
 {% block title %}Password Change Complete{% endblock %}
-{% block body %}
-    <meta http-equiv="refresh" content="5; url={{ config['STORMPATH_REDIRECT_URL'] }}" />
-{% endblock %}
 
 {% block content %}
 <body class="theme-default page-signin-alt">
+<meta http-equiv="refresh" content="5; url={{ config['STORMPATH_REDIRECT_URL'] }}" />
     
     <!-- Top Nav -->
     <div class="signin-header">
