@@ -5,7 +5,7 @@
 {% block content %}
 <p>Test 123!</p>
 
-{% if user.custom_data['site_admin'] %}
+{% if user.custom_data['site_admin'] == 'True' %}
     <p>This user is a site admin</p>
 {% else %}
     <p>This user is not a site admin</p>

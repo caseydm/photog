@@ -8,7 +8,7 @@ from flask.ext.stormpath import StormpathManager, login_required, \
 from stormpath.error import Error as StormpathError
 from flask.ext.login import login_user
 from flask.ext.sqlalchemy import SQLAlchemy
-from forms import RegistrationForm, AddContactForm, AddUserForm
+from forms import RegistrationForm, AddContactForm, AddUserForm, SetPasswordForm
 from itsdangerous import URLSafeTimedSerializer
 from sendgrid import SendGridError, SendGridClientError, SendGridServerError
 
@@ -205,7 +205,7 @@ def add_user():
 
     if form.validate_on_submit():
 
-        # token generation
+        # token serializer
         ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
         email = request.form['email']
@@ -224,7 +224,7 @@ def add_user():
                 raise_errors=True
             )
 
-            # setup email
+            # email setup
             message = sendgrid.Mail(
                 to=request.form['email'],
                 subject='Account Invitation',
@@ -242,50 +242,56 @@ def add_user():
             flash(err.message.get('message'))
         except SendGridServerError as err:
             flash(err.message.get('message'))
-            # data = form.data
-
-            # # set tenant id to same as current logged in user
-            # tenant_id = user.custom_data['tenant_id']
-
-            # # given_name and surname are required fields
-            # data['given_name'] = 'Anonymous'
-            # data['surname'] = 'Anonymous'
-
-            # # set tenant id and site_admin status
-            # data['custom_data'] = {
-            #     'tenant_id': tenant_id,
-            #     'site_admin': 'False'
-            # }
-
-            # # generate random password
-            # data['password'] = create_password()
-
-            # # create account
-            # account = User.create(**data)
-
-            # # add user to tenant group
-            # account.add_group(tenant_id)
-
-            # # send password reset email
-            # current_app.stormpath_manager.application.send_password_reset_email('caseym@gmail.com')
-
-            # # flash or redirect
-            # flash('Account created')
-        # except StormpathError as err:
-        #         flash(err.message.get('message'))
     return render_template('dashboard/add_user.html', form=form)
 
 
-@app.route('/add_user_confirm/<token>')
+@app.route('/add_user_confirm/<token>', methods=['GET', 'POST'])
 def add_user_confirm(token):
     """
     Function to handle user invite token
     """
-    email = None
+    form = SetPasswordForm()
+    decoded = None
     try:
         ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-        email = ts.loads(token, max_age=86400)
+        decoded = ts.loads(token, max_age=86400)
+        email = decoded[0]
+        tenant_id = decoded[1]
     except:
-        return render_template('account/forgot_complete.html')
+        abort(404)
 
-    return render_template('account/forgot_complete.html', email=email)
+    if form.validate_on_submit():
+        try:
+            data = {}
+            data['email'] = email
+            data['password'] = request.form['password']
+
+            # given_name and surname are required fields
+            data['given_name'] = 'Anonymous'
+            data['surname'] = 'Anonymous'
+
+            # set tenant id and site_admin status
+            data['custom_data'] = {
+                'tenant_id': tenant_id,
+                'site_admin': 'False'
+            }
+
+            # create account
+            account = User.create(**data)
+
+            # add user to tenant group
+            account.add_group(tenant_id)
+
+            # login user
+            login_user(account, remember=True)
+
+            # success redirect
+            return render_template('account/forgot_complete.html')
+        except StormpathError as err:
+            flash(err.message.get('message'))
+
+    elif request.method == 'POST':
+        flash("Passwords don't match.")
+
+    return render_template('account/add_user_setpassword.html',
+                           email=email, tenant_id=tenant_id, form=form)
