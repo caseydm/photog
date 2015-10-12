@@ -1,6 +1,6 @@
 # project/views.py
 
-import uuid, random
+import uuid, random, sendgrid
 from flask import Flask, redirect, render_template, \
     request, url_for, flash, current_app
 from flask.ext.stormpath import StormpathManager, login_required, \
@@ -9,6 +9,8 @@ from stormpath.error import Error as StormpathError
 from flask.ext.login import login_user
 from flask.ext.sqlalchemy import SQLAlchemy
 from forms import RegistrationForm, AddContactForm, AddUserForm
+from itsdangerous import URLSafeTimedSerializer
+from sendgrid import SendGridError, SendGridClientError, SendGridServerError
 
 
 # app setup
@@ -203,35 +205,53 @@ def add_user():
 
     if form.validate_on_submit():
         try:
-            data = form.data
+            sg = sendgrid.SendGridClient(
+                app.config['SENDGRID_API_KEY'],
+                raise_errors=True
+            )
 
-            # set tenant id to same as current logged in user
-            tenant_id = user.custom_data['tenant_id']
+            message = sendgrid.Mail(
+                to=request.form['email'],
+                subject='Account Invitation',
+                html='You have been invited to set up an account.',
+                text='You have been invited to set up an account',
+                from_email='support@photogapp.com'
+            )
+            status, msg = sg.send(message)
+            flash('Email sent')
+        except SendGridClientError as err:
+            flash(err.message.get('message'))
+        except SendGridServerError as err:
+            flash(err.message.get('message'))
+            # data = form.data
 
-            # given_name and surname are required fields
-            data['given_name'] = 'Anonymous'
-            data['surname'] = 'Anonymous'
+            # # set tenant id to same as current logged in user
+            # tenant_id = user.custom_data['tenant_id']
 
-            # set tenant id and site_admin status
-            data['custom_data'] = {
-                'tenant_id': tenant_id,
-                'site_admin': 'False'
-            }
+            # # given_name and surname are required fields
+            # data['given_name'] = 'Anonymous'
+            # data['surname'] = 'Anonymous'
 
-            # generate random password
-            data['password'] = create_password()
+            # # set tenant id and site_admin status
+            # data['custom_data'] = {
+            #     'tenant_id': tenant_id,
+            #     'site_admin': 'False'
+            # }
 
-            # create account
-            account = User.create(**data)
+            # # generate random password
+            # data['password'] = create_password()
 
-            # add user to tenant group
-            account.add_group(tenant_id)
+            # # create account
+            # account = User.create(**data)
 
-            # send password reset email
-            current_app.stormpath_manager.application.send_password_reset_email('caseym@gmail.com')
+            # # add user to tenant group
+            # account.add_group(tenant_id)
 
-            # flash or redirect
-            flash('Account created')
-        except StormpathError as err:
-                flash(err.message.get('message'))
+            # # send password reset email
+            # current_app.stormpath_manager.application.send_password_reset_email('caseym@gmail.com')
+
+            # # flash or redirect
+            # flash('Account created')
+        # except StormpathError as err:
+        #         flash(err.message.get('message'))
     return render_template('dashboard/add_user.html', form=form)
