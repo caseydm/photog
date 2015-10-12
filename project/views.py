@@ -2,7 +2,7 @@
 
 import uuid, random, sendgrid
 from flask import Flask, redirect, render_template, \
-    request, url_for, flash, current_app
+    request, url_for, flash, current_app, abort
 from flask.ext.stormpath import StormpathManager, login_required, \
     groups_required, user, User
 from stormpath.error import Error as StormpathError
@@ -204,21 +204,40 @@ def add_user():
     form = AddUserForm()
 
     if form.validate_on_submit():
+
+        # token generation
+        ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+
+        email = request.form['email']
+        tenant_id = user.custom_data['tenant_id']
+
+        token = ts.dumps([email, tenant_id])
+
+        confirm_url = url_for(
+            'add_user_confirm',
+            token=token,
+            _external=True)
         try:
+            # sendgrid setup
             sg = sendgrid.SendGridClient(
                 app.config['SENDGRID_API_KEY'],
                 raise_errors=True
             )
 
+            # setup email
             message = sendgrid.Mail(
                 to=request.form['email'],
                 subject='Account Invitation',
-                html='You have been invited to set up an account.',
-                text='You have been invited to set up an account',
+                html='You have been invited to set up an account. Click here: ' + confirm_url,
+                text='You have been invited to set up an account' + confirm_url,
                 from_email='support@photogapp.com'
             )
+
+            # send email
             status, msg = sg.send(message)
             flash('Email sent')
+
+        # catch and display errors
         except SendGridClientError as err:
             flash(err.message.get('message'))
         except SendGridServerError as err:
@@ -255,3 +274,18 @@ def add_user():
         # except StormpathError as err:
         #         flash(err.message.get('message'))
     return render_template('dashboard/add_user.html', form=form)
+
+
+@app.route('/add_user_confirm/<token>')
+def add_user_confirm(token):
+    """
+    Function to handle user invite token
+    """
+    email = None
+    try:
+        ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+        email = ts.loads(token, max_age=86400)
+    except:
+        return render_template('account/forgot_complete.html')
+
+    return render_template('account/forgot_complete.html', email=email)
