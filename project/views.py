@@ -218,7 +218,7 @@ def add_user():
                 'site_admin': 'False'
             }
 
-            # generate password
+            # generate random password
             data['password'] = create_password()
 
             # create account
