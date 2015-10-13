@@ -135,7 +135,7 @@ def register():
                 tenant_id = str(uuid.uuid4())
                 data['custom_data'] = {
                     'tenant_id': tenant_id,
-                    'site_admin': 'True'
+                    'site_admin': True
                 }
 
                 # Create the user account on Stormpath.  If this fails, an
