@@ -28,7 +28,9 @@
             ( site admin )
             {% endif %}</p><br>
         {% endfor %}
-        <p><a href="{{ url_for('add_user') }}"><button class="btn btn-info">Add Team Member</button></a></p>
+        {% if user.custom_data['site_admin'] == True %}
+            <p><a href="{{ url_for('add_user') }}"><button class="btn btn-info">Add Team Member</button></a></p>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
