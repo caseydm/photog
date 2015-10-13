@@ -1,6 +1,7 @@
 # project/views.py
 
-import uuid, random, sendgrid
+import uuid
+import sendgrid
 from flask import Flask, redirect, render_template, \
     request, url_for, flash, current_app, abort
 from flask.ext.stormpath import StormpathManager, login_required, \
@@ -8,9 +9,10 @@ from flask.ext.stormpath import StormpathManager, login_required, \
 from stormpath.error import Error as StormpathError
 from flask.ext.login import login_user
 from flask.ext.sqlalchemy import SQLAlchemy
-from forms import RegistrationForm, AddContactForm, AddUserForm, SetPasswordForm
+from forms import RegistrationForm, AddContactForm, \
+    AddUserForm, SetPasswordForm
 from itsdangerous import URLSafeTimedSerializer
-from sendgrid import SendGridError, SendGridClientError, SendGridServerError
+from sendgrid import SendGridClientError, SendGridServerError
 
 
 # app setup
@@ -84,26 +86,6 @@ def new_contact():
 ###################
 # accounts #
 ###################
-
-# random password function
-def create_password():
-    alphabet = "abcdefghijklmnopqrstuvwxyz"
-    upperalphabet = alphabet.upper()
-    pw_len = 20
-    pwlist = []
-
-    for i in range(pw_len//3):
-        pwlist.append(alphabet[random.randrange(len(alphabet))])
-        pwlist.append(upperalphabet[random.randrange(len(upperalphabet))])
-        pwlist.append(str(random.randrange(10)))
-    for i in range(pw_len-len(pwlist)):
-        pwlist.append(alphabet[random.randrange(len(alphabet))])
-
-    random.shuffle(pwlist)
-    pwstring = "".join(pwlist)
-
-    return(pwstring)
-
 
 # register
 @app.route('/register', methods=['GET', 'POST'])
@@ -228,8 +210,7 @@ def add_user():
             message = sendgrid.Mail(
                 to=request.form['email'],
                 subject='Account Invitation',
-                html='You have been invited to set up an account. Click here: ' + confirm_url,
-                text='You have been invited to set up an account' + confirm_url,
+                html='You have been invited to set up an account on PhotogApp. Click here: ' + confirm_url,
                 from_email='support@photogapp.com'
             )
 
@@ -255,13 +236,14 @@ def add_user_confirm(token):
     try:
         ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
         decoded = ts.loads(token, max_age=86400)
-        email = decoded[0]
-        tenant_id = decoded[1]
     except:
         abort(404)
 
     if form.validate_on_submit():
         try:
+            email = decoded[0]
+            tenant_id = decoded[1]
+
             data = {}
             data['email'] = email
             data['password'] = request.form['password']
@@ -293,5 +275,4 @@ def add_user_confirm(token):
     elif request.method == 'POST':
         flash("Passwords don't match.")
 
-    return render_template('account/add_user_setpassword.html',
-                           email=email, tenant_id=tenant_id, form=form)
+    return render_template('account/add_user_setpassword.html', form=form)
