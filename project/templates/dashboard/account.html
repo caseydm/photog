@@ -23,7 +23,11 @@
         <span class="panel-title">Team Members</span>
     </div>
     <div class="panel-body">
-        <p><b>Site admin:</b> {{ user.email }}</p><br>
+        {% for a in accounts %}
+            <p>{{ a }} {% if a.custom_data['site_admin'] == True %}
+            ( site admin )
+            {% endif %}</p><br>
+        {% endfor %}
         <p><a href="{{ url_for('add_user') }}"><button class="btn btn-info">Add Team Member</button></a></p>
     </div>
 </div>

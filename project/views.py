@@ -51,14 +51,18 @@ def index():
 def dashboard():
     contacts = db.session.query(Contact).filter_by(
         tenant_id=user.custom_data['tenant_id']).order_by(Contact.name.asc())
-    return render_template('dashboard/dashboard.html', user=user, contacts=contacts)
+    return render_template('dashboard/dashboard.html', user=user)
 
 
 # profile
 @app.route('/account/')
 @login_required
 def account():
-    return render_template('dashboard/account.html', user=user)
+    # get group accounts
+    group = user.groups.search({'name': user.custom_data['tenant_id']})
+    group = group[0]
+    accounts = group.accounts
+    return render_template('dashboard/account.html', user=user, accounts=accounts)
 
 
 # new contact
