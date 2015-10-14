@@ -103,77 +103,52 @@ def register():
     # If we received a POST request with valid information, we'll continue
     # processing.
     if form.validate_on_submit():
-        fail = False
 
-        # Iterate through all fields, grabbing the necessary form data and
-        # flashing error messages if required.
-        data = form.data
-        for field in data.keys():
-            if app.config['STORMPATH_ENABLE_%s' % field.upper()]:
-                if app.config['STORMPATH_REQUIRE_%s' % field.upper()] and not data[field]:
-                    fail = True
+        data = {}
+        # Attempt to create the user's account on Stormpath.
+        try:
+            # email and password
+            data['email'] = request.form['email']
+            data['password'] = request.form['password']
 
-                    # Manually override the terms for first / last name to make
-                    # errors more user friendly.
-                    if field == 'given_name':
-                        field = 'first name'
+            # given_name and surname are required fields
+            data['given_name'] = 'Anonymous'
+            data['surname'] = 'Anonymous'
 
-                    elif field == 'surname':
-                        field = 'last name'
+            # create a tenant ID
+            tenant_id = str(uuid.uuid4())
+            data['custom_data'] = {
+                'tenant_id': tenant_id,
+                'site_admin': True
+            }
 
-                    flash('%s is required.' % field.replace('_', ' ').title())
+            # Create the user account on Stormpath.  If this fails, an
+            # exception will be raised.
+            account = User.create(**data)
 
-        # If there are no missing fields (per our settings), continue.
-        if not fail:
+            # create a new stormpath group
+            directory = stormpath_manager.application.default_account_store_mapping.account_store
+            tenant_group = directory.groups.create({
+                'name': tenant_id,
+                'description': data['email']
+            })
 
-            # Attempt to create the user's account on Stormpath.
-            try:
+            # assign new user to the newly created group
+            account.add_group(tenant_group)
+            account.add_group('site_admin')
 
-                # Since Stormpath requires both the given_name and surname
-                # fields be set, we'll just set the both to 'Anonymous' if
-                # the user has # explicitly said they don't want to collect
-                # those fields.
-                data['given_name'] = data['given_name'] or 'Anonymous'
-                data['surname'] = data['surname'] or 'Anonymous'
+            # If we're able to successfully create the user's account,
+            # we'll log the user in (creating a secure session using
+            # Flask-Login), then redirect the user to the
+            # STORMPATH_REDIRECT_URL setting.
+            login_user(account, remember=True)
 
-                # create a tenant ID
-                tenant_id = str(uuid.uuid4())
-                data['custom_data'] = {
-                    'tenant_id': tenant_id,
-                    'site_admin': True
-                }
+            # redirect to dashboard
+            redirect_url = app.config['STORMPATH_REDIRECT_URL']
+            return redirect(redirect_url)
 
-                # Create the user account on Stormpath.  If this fails, an
-                # exception will be raised.
-                account = User.create(**data)
-
-                # create a new stormpath group
-                directory = stormpath_manager.application.default_account_store_mapping.account_store
-                tenant_group = directory.groups.create({
-                    'name': tenant_id,
-                    'description': data['email']
-                })
-
-                # assign new user to the newly created group
-                account.add_group(tenant_group)
-                account.add_group('site_admin')
-
-                # If we're able to successfully create the user's account,
-                # we'll log the user in (creating a secure session using
-                # Flask-Login), then redirect the user to the
-                # STORMPATH_REDIRECT_URL setting.
-                login_user(account, remember=True)
-
-                if 'STORMPATH_REGISTRATION_REDIRECT_URL'\
-                        in app.config:
-                    redirect_url = app.config[
-                        'STORMPATH_REGISTRATION_REDIRECT_URL']
-                else:
-                    redirect_url = app.config['STORMPATH_REDIRECT_URL']
-                return redirect(redirect_url)
-
-            except StormpathError as err:
-                flash(err.message.get('message'))
+        except StormpathError as err:
+            flash(err.message.get('message'))
 
     return render_template(
         'account/register.html',

@@ -13,6 +13,15 @@ class RegistrationForm(Form):
     surname = StringField('Last Name')
     email = StringField('Email', validators=[InputRequired()])
     password = PasswordField('Password', validators=[InputRequired()])
+    password_again = PasswordField('Password (again)', validators=[InputRequired()])
+
+    def validate_password_again(self, field):
+        """
+        Ensure both password fields match, otherwise raise a ValidationError.
+        :raises: ValidationError if passwords don't match.
+        """
+        if self.password.data != field.data:
+            raise ValidationError("Passwords don't match.")
 
 
 class AddContactForm(Form):
