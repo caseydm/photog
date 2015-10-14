@@ -212,7 +212,7 @@ def add_user_confirm(token):
     """
     Function to handle user invite token
     """
-    form = SetPasswordForm()
+    form = RegistrationForm()
     decoded = None
     try:
         ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
