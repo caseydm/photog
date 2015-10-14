@@ -1,0 +1,26 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Add User Success{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Account</h1>
+</div>
+
+<div class="panel">
+    <div class="panel-heading">
+        <span class="panel-title">Confirmation</span>
+    </div>
+    <div class="panel-body">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="alert alert-success">
+            {% for message in messages %}
+              {{ message }}
+            {% endfor %}
+          </div>
+        {% endif %}
+    {% endwith %}
+    </div>
+</div>
+{% endblock %}

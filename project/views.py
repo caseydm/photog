@@ -37,8 +37,9 @@ from models import Contact
 
 # index
 @app.route('/')
+@login_required
 def index():
-    return render_template('index.html')
+    return render_template('dashboard/dashboard.html')
 
 
 #############
@@ -220,7 +221,8 @@ def add_user():
 
             # send email
             status, msg = sg.send(message)
-            flash('Email sent')
+            flash('Invite sent successfully.')
+            return render_template('dashboard/add_user_complete.html')
 
         # catch and display errors
         except SendGridClientError as err:
@@ -240,12 +242,12 @@ def add_user_confirm(token):
     try:
         ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
         decoded = ts.loads(token, max_age=86400)
+        email = decoded[0]
     except:
         abort(404)
 
     if form.validate_on_submit():
         try:
-            email = decoded[0]
             tenant_id = decoded[1]
 
             data = {}
@@ -272,11 +274,13 @@ def add_user_confirm(token):
             login_user(account, remember=True)
 
             # success redirect
-            return render_template('account/forgot_complete.html')
+            return render_template('account/add_user_complete.html')
         except StormpathError as err:
             flash(err.message.get('message'))
 
     elif request.method == 'POST':
         flash("Passwords don't match.")
 
-    return render_template('account/add_user_setpassword.html', form=form)
+    return render_template('account/add_user_setpassword.html',
+                           form=form,
+                           email=email)
