@@ -10,7 +10,7 @@ from stormpath.error import Error as StormpathError
 from flask.ext.login import login_user
 from flask.ext.sqlalchemy import SQLAlchemy
 from forms import RegistrationForm, AddContactForm, \
-    AddUserForm, SetPasswordForm
+    AddUserForm
 from itsdangerous import URLSafeTimedSerializer
 from sendgrid import SendGridClientError, SendGridServerError
 
@@ -161,7 +161,7 @@ def register():
 @groups_required(['site_admin'])
 def add_user():
     """
-    Add a user to an account
+    Send invite email with token to invited user
     """
     form = AddUserForm()
 
@@ -173,12 +173,15 @@ def add_user():
         email = request.form['email']
         tenant_id = user.custom_data['tenant_id']
 
+        # create token containing email and tenant_id
         token = ts.dumps([email, tenant_id])
 
+        # create url with token, e.g. /add_user_confirm/asdf-asd-fasdf
         confirm_url = url_for(
             'add_user_confirm',
             token=token,
             _external=True)
+
         try:
             # sendgrid setup
             sg = sendgrid.SendGridClient(
@@ -196,10 +199,11 @@ def add_user():
 
             # send email
             status, msg = sg.send(message)
+
             flash('Invite sent successfully.')
             return render_template('dashboard/add_user_complete.html')
 
-        # catch and display errors
+        # catch and display SendGrid errors
         except SendGridClientError as err:
             flash(err.message.get('message'))
         except SendGridServerError as err:
@@ -210,7 +214,7 @@ def add_user():
 @app.route('/add_user_confirm/<token>', methods=['GET', 'POST'])
 def add_user_confirm(token):
     """
-    Function to handle user invite token
+    Decode invite token and create new user account
     """
     form = RegistrationForm()
     decoded = None
