@@ -108,8 +108,8 @@ def register():
         # Attempt to create the user's account on Stormpath.
         try:
             # email and password
-            data['email'] = request.form['email']
-            data['password'] = request.form['password']
+            data['email'] = form.email.data
+            data['password'] = form.password.data
 
             # given_name and surname are required fields
             data['given_name'] = 'Anonymous'

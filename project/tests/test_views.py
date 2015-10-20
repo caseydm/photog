@@ -13,8 +13,15 @@ class TestRegister(PhotogTestCase):
 
         # Ensure that valid fields result in success.
         resp = self.app.post('/login', data={
-            'email': 'caseym@gmail.com',
+            'login': 'caseym@gmail.com',
             'password': 'Wild94.9',
-            #'password_again': 'woot1LoveCookies!'
         }, follow_redirects=True)
-        self.assertEqual(resp.status_code, 302)
+        assert 'Dashboard' and 'caseym@gmail.com' in resp.data
+
+        resp = self.app.post('/register', data={
+            'email': 'cdm@hotmail.com',
+            'password': 'Whatisthis334',
+            'password_again': 'Whatisthis334',
+            }, follow_redirects=True)
+        # print resp.data
+        assert 'Dashboard' and 'cdm@hotmail.com' in resp.data
