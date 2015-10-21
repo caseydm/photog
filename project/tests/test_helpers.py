@@ -11,9 +11,9 @@ from views import app
 class PhotogTestCase(TestCase):
 
     def setUp(self):
-        self.app = app.test_client()
-        self.app.testing = True
         app.config['WTF_CSRF_ENABLED'] = False
+        app.config['TESTING'] = True
+        self.app = app.test_client()
 
     def tearDown(self):
         pass
