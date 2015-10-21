@@ -25,7 +25,6 @@ class TestRegister(PhotogTestCase):
             'password': 'TempPass123',
             'password_again': 'TempPass123',
             })
-        print resp.data
         assert 'Register for an Account' in resp.data
 
         # Valid data results in success
@@ -34,7 +33,6 @@ class TestRegister(PhotogTestCase):
             'password': 'TempPass123',
             'password_again': 'TempPass123',
             }, follow_redirects=True)
-        print resp.data
         assert 'Dashboard' in resp.data
 
 
