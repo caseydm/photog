@@ -13,7 +13,7 @@ class TestRegister(PhotogTestCase):
 
         # Ensure that no password results in error
         resp = self.app.post('/register', data={
-            'email': 'cdm@hotmail.com',
+            'email': 'testuser@photog.com',
             'password': '',
             'password_again': '',
             })
