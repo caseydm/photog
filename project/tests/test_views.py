@@ -8,11 +8,11 @@ class TestRegister(PhotogTestCase):
 
     def test_register_user(self):
         # Page loads with correct text
-        resp = self.app.get('/register')
+        resp = self.client.get('/register')
         assert 'Register for an Account' in resp.data
 
         # Ensure that no password results in error
-        resp = self.app.post('/register', data={
+        resp = self.client.post('/register', data={
             'email': 'testuser@photog.com',
             'password': '',
             'password_again': '',
@@ -20,7 +20,7 @@ class TestRegister(PhotogTestCase):
         assert 'Register for an Account' in resp.data
 
         # Ensure that no email address results in error
-        resp = self.app.post('/register', data={
+        resp = self.client.post('/register', data={
             'email': '',
             'password': 'TempPass123',
             'password_again': 'TempPass123',
@@ -28,7 +28,7 @@ class TestRegister(PhotogTestCase):
         assert 'Register for an Account' in resp.data
 
         # Valid data results in success
-        resp = self.app.post('/register', data={
+        resp = self.client.post('/register', data={
             'email': 'testuser@photog.com',
             'password': 'TempPass123',
             'password_again': 'TempPass123',
@@ -41,8 +41,5 @@ class TestLogin(PhotogTestCase):
 
     # Page loads with correct text
     def test_login_user(self):
-        resp = self.app.get('/login')
+        resp = self.client.get('/login')
         assert 'Log in to your Account' in resp.data
-
-
-
