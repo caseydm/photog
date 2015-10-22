@@ -29,11 +29,14 @@ class TestRegister(PhotogTestCase):
 
         # Valid data results in success
         resp = self.client.post('/register', data={
-            'email': 'testuser@photog.com',
+            'email': self.test_email,
             'password': 'TempPass123',
             'password_again': 'TempPass123',
             }, follow_redirects=True)
         assert 'Dashboard' in resp.data
+
+        self.remove_test_user_tenant_group(self.test_email)
+        self.remove_test_user(self.test_email)
 
 
 class TestLogin(PhotogTestCase):
