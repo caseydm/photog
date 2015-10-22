@@ -35,29 +35,31 @@ class PhotogTestCase(TestCase):
         pass
 
     def login(self, username, password):
-        return self.client.post('/login', data=dict(
+        return self.sp_client.post('/login', data=dict(
             username=username,
             password=password
         ), follow_redirects=True)
 
-    def remove_test_user(self, email):
+    def get_test_user(self, email):
         accounts = self.application.accounts.search({
             'email': email
         })
-        href = ""
         for account in accounts:
             if account.email == email:
-                href = account.href
-                test_user = self.sp_client.accounts.get(href)
-                test_user.delete()
+                return account
 
-    def remove_test_user_tenant_group(self, email):
+    def get_test_user_group(self, email):
         groups = self.application.groups.search({
             'description': email
         })
-        href = ""
         for group in groups:
             if group.description == email:
-                href = group.href
-                test_user_group = self.sp_client.groups.get(href)
-                test_user_group.delete()
+                return group
+
+    def remove_test_user(self, email):
+        test_user = self.get_test_user(email)
+        test_user.delete()
+
+    def remove_test_user_tenant_group(self, email):
+        test_user_group = self.get_test_user_group(email)
+        test_user_group.delete()
