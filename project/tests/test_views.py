@@ -1,6 +1,9 @@
 """Run tests against our custom views."""
 
+import mock
 from test_helpers import PhotogTestCase
+import sendgrid
+from views import app
 
 
 class TestRegister(PhotogTestCase):
@@ -57,25 +60,33 @@ class TestRegister(PhotogTestCase):
 class TestAddUser(PhotogTestCase):
     """Test add user functionality"""
 
-    def test_add_user_page_loads(self):
-        # set up test user 
+    sg = sendgrid.SendGridClient(app.config['SENDGRID_API_KEY'])
+
+    @mock.patch('sg.send')
+    def test_add_user_page_loads(self, mocked_send):
+
+        # set up test user that is logged in
         self.client.post('/register', data={
             'email': self.test_email,
             'password': 'TempPass123',
             'password_again': 'TempPass123',
             }, follow_redirects=True)
 
+        # ensure page loads properly
         resp = self.client.get('/add_user')
         assert 'Add Team Member' in resp.data
 
-        # resp = self.client.post('/add_user', data={
-        #         'email': self.test_email
-        #     }, follow_redirects=True)
-        # assert 'User invitation sent' in resp.data
+        # add a user
+        mocked_send.return_value = None  # Do nothing on send
+        resp = self.client.post('/add_user', data={
+                'email': 'caseym@gmail.com'
+            }, follow_redirects=True)
+        assert 'Wow' in resp.data
 
         # delete user and group used for testing
         self.remove_test_user_tenant_group(self.test_email)
         self.remove_test_user(self.test_email)
+
 
 class TestLogin(PhotogTestCase):
     """Test login view."""
