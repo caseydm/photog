@@ -79,7 +79,7 @@ class TestAddUser(PhotogTestCase):
         # add a user
         mocked_send.return_value = None  # Do nothing on send
         resp = self.client.post('/add_user', data={
-                'email': 'caseym@gmail.com'
+                'email': self.test_email
             }, follow_redirects=True)
         assert 'Wow' in resp.data
 
