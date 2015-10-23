@@ -54,6 +54,29 @@ class TestRegister(PhotogTestCase):
         self.remove_test_user(self.test_email)
 
 
+class TestAddUser(PhotogTestCase):
+    """Test add user functionality"""
+
+    def test_add_user_page_loads(self):
+        # set up test user 
+        self.client.post('/register', data={
+            'email': self.test_email,
+            'password': 'TempPass123',
+            'password_again': 'TempPass123',
+            }, follow_redirects=True)
+
+        resp = self.client.get('/add_user')
+        assert 'Add Team Member' in resp.data
+
+        # resp = self.client.post('/add_user', data={
+        #         'email': self.test_email
+        #     }, follow_redirects=True)
+        # assert 'User invitation sent' in resp.data
+
+        # delete user and group used for testing
+        self.remove_test_user_tenant_group(self.test_email)
+        self.remove_test_user(self.test_email)
+
 class TestLogin(PhotogTestCase):
     """Test login view."""
 
