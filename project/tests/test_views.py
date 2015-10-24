@@ -2,8 +2,7 @@
 
 import mock
 from test_helpers import PhotogTestCase
-import sendgrid
-from views import app
+from flask.ext.login import login_user
 
 
 class TestRegister(PhotogTestCase):
@@ -53,45 +52,29 @@ class TestRegister(PhotogTestCase):
         self.assertTrue(member_site_admin)
 
         # delete user and group used for testing
-        self.remove_test_user_tenant_group(self.test_email)
-        self.remove_test_user(self.test_email)
+        test_user_group.delete()
+        test_user.delete()
 
 
 class TestAddUser(PhotogTestCase):
     """Test add user functionality"""
 
-    sg = sendgrid.SendGridClient(app.config['SENDGRID_API_KEY'])
+    # mock our sendgrid method so it does not send emails in test
+    @mock.patch('views.sendgrid.SendGridClient.send')
+    def test_add_user_page(self, mocked_send):
 
-    @mock.patch('sg.send')
-    def test_add_user_page_loads(self, mocked_send):
-
-        # set up test user that is logged in
-        self.client.post('/register', data={
-            'email': self.test_email,
-            'password': 'TempPass123',
-            'password_again': 'TempPass123',
-            }, follow_redirects=True)
+        resp = self.login(self.user.email, '4P@$$w0rd!')
 
         # ensure page loads properly
         resp = self.client.get('/add_user')
         assert 'Add Team Member' in resp.data
 
         # add a user
-        mocked_send.return_value = None  # Do nothing on send
+        mocked_send.return_value = None
+        
         resp = self.client.post('/add_user', data={
-                'email': self.test_email
+                'email': 'joe@hotmail.com'
             }, follow_redirects=True)
-        assert 'Wow' in resp.data
+        assert 'Invite sent successfully' in resp.data
 
-        # delete user and group used for testing
-        self.remove_test_user_tenant_group(self.test_email)
-        self.remove_test_user(self.test_email)
-
-
-class TestLogin(PhotogTestCase):
-    """Test login view."""
-
-    # Page loads with correct text
-    def test_login_user(self):
-        resp = self.client.get('/login')
-        assert 'Log in to your Account' in resp.data
+        token = self.create_token(self.user.email, self.user.custom_data['tenant_id'])

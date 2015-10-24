@@ -8,6 +8,7 @@ from os import environ
 from unittest import TestCase
 from views import app
 from stormpath.client import Client
+from itsdangerous import URLSafeTimedSerializer
 
 
 class PhotogTestCase(TestCase):
@@ -31,12 +32,16 @@ class PhotogTestCase(TestCase):
 
         self.test_email = 'test_user@photog.com'
 
-    def tearDown(self):
-        pass
+        self.user = self.create_default_user()
 
-    def login(self, username, password):
-        return self.sp_client.post('/login', data=dict(
-            username=username,
+    def tearDown(self):
+        self.user.delete()
+        group = self.get_test_user_group('test_user2@example.com')
+        group.delete()
+
+    def login(self, email, password):
+        return self.client.post('/login', data=dict(
+            login=email,
             password=password
         ), follow_redirects=True)
 
@@ -56,10 +61,33 @@ class PhotogTestCase(TestCase):
             if group.description == email:
                 return group
 
-    def remove_test_user(self, email):
-        test_user = self.get_test_user(email)
-        test_user.delete()
+    def create_token(self, email, tenant_id):
+        ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+        token = ts.dumps([email, tenant_id])
+        return token
 
-    def remove_test_user_tenant_group(self, email):
-        test_user_group = self.get_test_user_group(email)
-        test_user_group.delete()
+    def create_default_user(self):
+        #user = self.application.accounts.create({
+        user = self.application.accounts.create({
+            'given_name': 'anonymous',
+            'surname': 'anonymous',
+            'email': 'test_user2@example.com',
+            'password': '4P@$$w0rd!',
+            "custom_data": {
+                "tenant_id": "cf336120-25ef-4b01-8bb1-ba2b69213b71",
+                "site_admin": True,
+            }
+        })
+
+        directory = self.application.default_account_store_mapping.account_store
+        
+        tenant_group = directory.groups.create({
+            'name': 'cf336120-25ef-4b01-8bb1-ba2b69213b71',
+            'description': 'test_user2@example.com',
+        })
+
+        # assign new user to the newly created group
+        user.add_group(tenant_group)
+        user.add_group('site_admin')
+
+        return user

@@ -198,7 +198,7 @@ def add_user():
             )
 
             # send email
-            status, msg = sg.send(message)
+            sg.send(message)
 
             flash('Invite sent successfully.')
             return render_template('dashboard/add_user_complete.html')
