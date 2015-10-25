@@ -2,7 +2,6 @@
 
 import mock
 from test_helpers import PhotogTestCase
-from flask.ext.login import login_user
 
 
 class TestRegister(PhotogTestCase):
@@ -59,16 +58,33 @@ class TestRegister(PhotogTestCase):
 class TestAddUser(PhotogTestCase):
     """Test add user functionality"""
 
-    # mock our sendgrid method so it does not send emails in test
-    @mock.patch('views.sendgrid.SendGridClient.send')
-    def test_add_user_page(self, mocked_send):
-
-        resp = self.login(self.user.email, '4P@$$w0rd!')
+    def test_add_user_page_loads(self):
+        self.login(self.user.email, '4P@$$w0rd!')
 
         # ensure page loads properly
         resp = self.client.get('/add_user')
         assert 'Add Team Member' in resp.data
 
+    @mock.patch('views.sendgrid.SendGridClient.send')
+    def test_add_user_bad_input(self, mocked_send):
+        
+        self.login(self.user.email, '4P@$$w0rd!')
+
+        # set sendgrid method to none
+        mocked_send.return_value = None
+
+        # submit add_user page
+        resp = self.client.post('/add_user', data={
+                'email': ''
+            }, follow_redirects=True)
+        assert 'Add Team Member' in resp.data
+
+    # mock our sendgrid method so it does not send emails in test
+    @mock.patch('views.sendgrid.SendGridClient.send')
+    def test_add_user_valid_input(self, mocked_send):
+
+        self.login(self.user.email, '4P@$$w0rd!')
+        
         # set sendgrid method to none
         mocked_send.return_value = None
         
@@ -89,7 +105,7 @@ class TestAddUser(PhotogTestCase):
             }, follow_redirects=True)
         assert 'Your account was created' in resp.data
 
-        # get added user objects
+        # get addon user objects
         user_add_on = self.get_test_user('joe@hotmail.com')
         group_admin = self.get_test_user_group('test_user2@example.com')
 
@@ -97,7 +113,7 @@ class TestAddUser(PhotogTestCase):
             if gms.group.description == 'test_user2@example.com':
                 group_add_on = gms.group
 
-        #check that added user is valid
+        # check that added user is associated with tenant group
         self.assertEqual(self.user.custom_data['tenant_id'], user_add_on.custom_data['tenant_id'])
         self.assertEqual(group_add_on.name, group_admin.name)
 
