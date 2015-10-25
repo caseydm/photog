@@ -257,8 +257,8 @@ def add_user_confirm(token):
         except StormpathError as err:
             flash(err.message.get('message'))
 
-    elif request.method == 'POST':
-        flash("Passwords don't match.")
+    #elif request.method == 'POST':
+        #flash("Pass don't match.")
 
     return render_template('account/add_user_setpassword.html',
                            form=form,

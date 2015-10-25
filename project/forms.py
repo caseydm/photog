@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
 from wtforms.fields import PasswordField, StringField
-from wtforms.validators import InputRequired, ValidationError
+from wtforms.validators import InputRequired, ValidationError, EqualTo
 
 
 class RegistrationForm(Form):
@@ -8,8 +8,11 @@ class RegistrationForm(Form):
     Register a new user.
     """
     email = StringField('Email', validators=[InputRequired()])
-    password = PasswordField('Password', validators=[InputRequired()])
-    password_again = PasswordField('Password (again)', validators=[InputRequired()])
+    password = PasswordField('Password', validators=[
+        InputRequired(), 
+        EqualTo('password_again', message='Passwords must match')
+    ])
+    password_again = PasswordField('Password (again)')
 
     def validate_password_again(self, field):
         """

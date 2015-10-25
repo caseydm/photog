@@ -69,12 +69,21 @@ class TestAddUser(PhotogTestCase):
         resp = self.client.get('/add_user')
         assert 'Add Team Member' in resp.data
 
-        # add a user
+        # set sendgrid method to none
         mocked_send.return_value = None
         
+        # submit add_user page
         resp = self.client.post('/add_user', data={
                 'email': 'joe@hotmail.com'
             }, follow_redirects=True)
         assert 'Invite sent successfully' in resp.data
 
-        token = self.create_token(self.user.email, self.user.custom_data['tenant_id'])
+        token = self.create_token('joe@hotmail.com', self.user.custom_data['tenant_id'])
+
+        resp = self.client.post('/add_user_confirm/' + token, data={
+                'password': 'TempPass123',
+                'password_again': 'TempPass123'
+            }, follow_redirects=True)
+        print resp.data
+        assert 'Your account was created, and you have been logged into your account.' in resp.data
+
