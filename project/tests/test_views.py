@@ -78,13 +78,35 @@ class TestAddUser(PhotogTestCase):
             }, follow_redirects=True)
         assert 'Invite sent successfully' in resp.data
 
+        # create token for add_user_confirm view to consume
         token = self.create_token('joe@hotmail.com', self.user.custom_data['tenant_id'])
 
+        # create new add on user
         resp = self.client.post('/add_user_confirm/' + token, data={
                 'email': 'joe@hotmail.com',
                 'password': 'TempPass123',
                 'password_again': 'TempPass123'
             }, follow_redirects=True)
-        print resp.data
         assert 'Your account was created' in resp.data
 
+        # get added user objects
+        user_add_on = self.get_test_user('joe@hotmail.com')
+        group_admin = self.get_test_user_group('test_user2@example.com')
+
+        for gms in user_add_on.group_memberships:
+            if gms.group.description == 'test_user2@example.com':
+                group_add_on = gms.group
+
+        #check that added user is valid
+        self.assertEqual(self.user.custom_data['tenant_id'], user_add_on.custom_data['tenant_id'])
+        self.assertEqual(group_add_on.name, group_admin.name)
+
+        # ensure user is not in admin group
+        member_site_admin = False
+        for group in user_add_on.groups:
+            if group.name == 'site_admin':
+                member_site_admin = True
+        self.assertFalse(member_site_admin)
+
+        # delete added user
+        user_add_on.delete()
