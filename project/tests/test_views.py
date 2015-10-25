@@ -81,9 +81,10 @@ class TestAddUser(PhotogTestCase):
         token = self.create_token('joe@hotmail.com', self.user.custom_data['tenant_id'])
 
         resp = self.client.post('/add_user_confirm/' + token, data={
+                'email': 'joe@hotmail.com',
                 'password': 'TempPass123',
                 'password_again': 'TempPass123'
             }, follow_redirects=True)
         print resp.data
-        assert 'Your account was created, and you have been logged into your account.' in resp.data
+        assert 'Your account was created' in resp.data
 
