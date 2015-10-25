@@ -2,41 +2,28 @@
 
 import uuid
 import sendgrid
-from flask import Flask, redirect, render_template, \
-    request, url_for, flash, current_app, abort
-from flask.ext.stormpath import StormpathManager, login_required, \
+from app import app
+from flask import Blueprint, redirect, render_template, \
+    request, url_for, flash, abort
+from flask.ext.stormpath import login_required, \
     groups_required, user, User
 from stormpath.error import Error as StormpathError
 from flask.ext.login import login_user
-from flask.ext.sqlalchemy import SQLAlchemy
-from forms import RegistrationForm, AddContactForm, \
-    AddUserForm
+from app.accounts.forms import RegistrationForm, AddUserForm
 from itsdangerous import URLSafeTimedSerializer
 from sendgrid import SendGridClientError, SendGridServerError
 
+# from models import Contact
 
-# app setup
-app = Flask(__name__, instance_relative_config=True)
-
-# app conig
-app.config.from_object('config')
-app.config.from_pyfile('config.py')
-
-# stormpath setup
-stormpath_manager = StormpathManager(app)
-
-# database setup
-db = SQLAlchemy(app)
-
-from models import Contact
-
+mod = Blueprint('accounts', __name__)
 
 ################
 # static pages #
 ################
 
+
 # index
-@app.route('/')
+@mod.route('/')
 @login_required
 def index():
     return render_template('dashboard/dashboard.html')
@@ -47,16 +34,16 @@ def index():
 #############
 
 # dashboard home
-@app.route('/dashboard/')
+@mod.route('/dashboard/')
 @login_required
 def dashboard():
-    contacts = db.session.query(Contact).filter_by(
-        tenant_id=user.custom_data['tenant_id']).order_by(Contact.name.asc())
+    # contacts = db.session.query(Contact).filter_by(
+    #     tenant_id=user.custom_data['tenant_id']).order_by(Contact.name.asc())
     return render_template('dashboard/dashboard.html', user=user)
 
 
 # profile
-@app.route('/account/')
+@mod.route('/account/')
 @login_required
 def account():
     # get group accounts
@@ -67,25 +54,25 @@ def account():
 
 
 # new contact
-@app.route('/new_contact/', methods=['GET', 'POST'])
-@login_required
-def new_contact():
-    """
-    Add new contact
-    """
-    form = AddContactForm(request.form)
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            new_contact = Contact(
-                form.name.data,
-                form.email.data,
-                user.username,
-                user.custom_data['tenant_id']
-            )
-        db.session.add(new_contact)
-        db.session.commit()
-        return redirect(url_for('dashboard'))
-    return render_template('new_contact.html', form=form)
+# @mod.route('/new_contact/', methods=['GET', 'POST'])
+# @login_required
+# def new_contact():
+#     """
+#     Add new contact
+#     """
+#     form = AddContactForm(request.form)
+#     if request.method == 'POST':
+#         if form.validate_on_submit():
+#             new_contact = Contact(
+#                 form.name.data,
+#                 form.email.data,
+#                 user.username,
+#                 user.custom_data['tenant_id']
+#             )
+#         db.session.add(new_contact)
+#         db.session.commit()
+#         return redirect(url_for('dashboard'))
+#     return render_template('new_contact.html', form=form)
 
 
 ###################
@@ -93,7 +80,7 @@ def new_contact():
 ###################
 
 # register
-@app.route('/register', methods=['GET', 'POST'])
+@mod.route('/register', methods=['GET', 'POST'])
 def register():
     """
     Register a new user with Stormpath.
@@ -156,7 +143,7 @@ def register():
     )
 
 
-@app.route('/add_user', methods=['GET', 'POST'])
+@mod.route('/add_user', methods=['GET', 'POST'])
 @login_required
 @groups_required(['site_admin'])
 def add_user():
@@ -211,7 +198,7 @@ def add_user():
     return render_template('dashboard/add_user.html', form=form)
 
 
-@app.route('/add_user_confirm/<token>', methods=['GET', 'POST'])
+@mod.route('/add_user_confirm/<token>', methods=['GET', 'POST'])
 def add_user_confirm(token):
     """
     Decode invite token and create new user account
@@ -256,9 +243,6 @@ def add_user_confirm(token):
             return render_template('account/add_user_complete.html')
         except StormpathError as err:
             flash(err.message.get('message'))
-
-    #elif request.method == 'POST':
-        #flash("Pass don't match.")
 
     return render_template('account/add_user_setpassword.html',
                            form=form,
