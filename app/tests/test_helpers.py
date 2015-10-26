@@ -6,19 +6,17 @@ operations.
 
 from os import environ
 from unittest import TestCase
-from views import app
+from app import create_app
 from stormpath.client import Client
 from itsdangerous import URLSafeTimedSerializer
+from flask import current_app
 
 
 class PhotogTestCase(TestCase):
 
     def setUp(self):
-        app.config['WTF_CSRF_ENABLED'] = False
-        app.config['TESTING'] = True
-        app.config['STORMPATH_APPLICATION'] = 'photog_test'
-        self.app = app
-        self.client = app.test_client()
+        self.app = create_app('testing')
+        self.client = self.app.test_client()
 
         # stormpath client
         self.sp_client = Client(
@@ -62,7 +60,7 @@ class PhotogTestCase(TestCase):
                 return group
 
     def create_token(self, email, tenant_id):
-        ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+        ts = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
         token = ts.dumps([email, tenant_id])
         return token
 

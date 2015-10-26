@@ -2,20 +2,18 @@
 
 import uuid
 import sendgrid
-from app import app, stormpath_manager
+from manage import app
+from app import stormpath_manager
 from flask import Blueprint, redirect, render_template, \
     request, url_for, flash, abort
 from flask.ext.stormpath import login_required, \
     groups_required, user, User
 from stormpath.error import Error as StormpathError
 from flask.ext.login import login_user
-from app.accounts.forms import RegistrationForm, AddUserForm
+from .forms import RegistrationForm, AddUserForm
 from itsdangerous import URLSafeTimedSerializer
 from sendgrid import SendGridClientError, SendGridServerError
-
-# from models import Contact
-
-mod = Blueprint('accounts', __name__)
+from . import accounts
 
 ################
 # static pages #
@@ -23,7 +21,7 @@ mod = Blueprint('accounts', __name__)
 
 
 # index
-@mod.route('/')
+@accounts.route('/')
 @login_required
 def index():
     return render_template('dashboard/dashboard.html')
@@ -34,7 +32,7 @@ def index():
 #############
 
 # dashboard home
-@mod.route('/dashboard/')
+@accounts.route('/dashboard/')
 @login_required
 def dashboard():
     # contacts = db.session.query(Contact).filter_by(
@@ -43,7 +41,7 @@ def dashboard():
 
 
 # profile
-@mod.route('/account/')
+@accounts.route('/account/')
 @login_required
 def account():
     # get group accounts
@@ -80,7 +78,7 @@ def account():
 ###################
 
 # register
-@mod.route('/register', methods=['GET', 'POST'])
+@accounts.route('/register', methods=['GET', 'POST'])
 def register():
     """
     Register a new user with Stormpath.
@@ -143,7 +141,7 @@ def register():
     )
 
 
-@mod.route('/add_user', methods=['GET', 'POST'])
+@accounts.route('/add_user', methods=['GET', 'POST'])
 @login_required
 @groups_required(['site_admin'])
 def add_user():
@@ -165,7 +163,7 @@ def add_user():
 
         # create url with token, e.g. /add_user_confirm/asdf-asd-fasdf
         confirm_url = url_for(
-            'add_user_confirm',
+            '.add_user_confirm',
             token=token,
             _external=True)
 
@@ -198,7 +196,7 @@ def add_user():
     return render_template('dashboard/add_user.html', form=form)
 
 
-@mod.route('/add_user_confirm/<token>', methods=['GET', 'POST'])
+@accounts.route('/add_user_confirm/<token>', methods=['GET', 'POST'])
 def add_user_confirm(token):
     """
     Decode invite token and create new user account

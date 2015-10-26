@@ -1,16 +1,18 @@
 from flask import Flask
 from flask.ext.stormpath import StormpathManager
+from config import config
 
-# app setup
-app = Flask(__name__, instance_relative_config=True)
+stormpath_manager = StormpathManager()
 
-# app conig
-app.config.from_object('config')
-app.config.from_pyfile('config.py')
 
-# stormpath setup
-stormpath_manager = StormpathManager(app)
+def create_app(config_name):
+    app = Flask(__name__)
+    app.config.from_object(config[config_name])
+    config[config_name].init_app(app)
+    stormpath_manager.init_app(app)
 
-# Register blueprint(s)
-from app.accounts.views import mod as accounts
-app.register_blueprint(accounts)
+    # register blueprint
+    from .accounts import accounts as accounts_blueprint
+    app.register_blueprint(accounts_blueprint)
+
+    return app
