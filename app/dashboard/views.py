@@ -6,7 +6,7 @@ from . import dashboard
 # dashboard home
 @dashboard.route('/dashboard/')
 @login_required
-def dashboard():
+def dashboard_home():
     # contacts = db.session.query(Contact).filter_by(
     #     tenant_id=user.custom_data['tenant_id']).order_by(Contact.name.asc())
     return render_template('dashboard/dashboard.html', user=user)
