@@ -11,7 +11,7 @@
             <div class="navbar-header">
 
                 <!-- Logo -->
-                <a href="{{ url_for('accounts.dashboard') }}" class="navbar-brand">
+                <a href="{{ url_for('dashboard.dashboard') }}" class="navbar-brand">
                     <strong>Photog</strong>App
                 </a>
 
@@ -30,7 +30,7 @@
                                     <span>{{ user.email }}</span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="{{ url_for('accounts.account') }}"><i class="dropdown-icon fa fa-cog"></i>&nbsp;&nbsp;Account</a></li>
+                                    <li><a href="{{ url_for('dashboard.account') }}"><i class="dropdown-icon fa fa-cog"></i>&nbsp;&nbsp;Account</a></li>
                                     {% if user.custom_data['site_admin'] == True %}
                                     <li><a href="{{ url_for('accounts.add_user') }}"><i class="dropdown-icon fa fa-plus"></i>&nbsp;&nbsp;Add User</a></li>
                                     {% endif %}
