@@ -9,7 +9,7 @@ class RegistrationForm(Form):
     """
     email = StringField('Email', validators=[InputRequired()])
     password = PasswordField('Password', validators=[
-        InputRequired(), 
+        InputRequired(),
         EqualTo('password_again', message='Passwords must match')
     ])
     password_again = PasswordField('Password (again)')
@@ -21,14 +21,6 @@ class RegistrationForm(Form):
         """
         if self.password.data != field.data:
             raise ValidationError("Passwords don't match.")
-
-
-class AddContactForm(Form):
-    """
-    Add a contact
-    """
-    name = StringField('Name:', validators=[InputRequired()])
-    email = StringField('Email:', validators=[InputRequired()])
 
 
 class AddUserForm(Form):

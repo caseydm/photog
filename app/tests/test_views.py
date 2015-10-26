@@ -65,7 +65,7 @@ class TestAddUser(PhotogTestCase):
         resp = self.client.get('/add_user')
         assert 'Add Team Member' in resp.data
 
-    @mock.patch('views.sendgrid.SendGridClient.send')
+    @mock.patch('app.accounts.views.sendgrid.SendGridClient.send')
     def test_add_user_bad_input(self, mocked_send):
         
         self.login(self.user.email, '4P@$$w0rd!')
@@ -80,7 +80,7 @@ class TestAddUser(PhotogTestCase):
         assert 'Add Team Member' in resp.data
 
     # mock our sendgrid method so it does not send emails in test
-    @mock.patch('views.sendgrid.SendGridClient.send')
+    @mock.patch('app.accounts.views.sendgrid.SendGridClient.send')
     def test_add_user_valid_input(self, mocked_send):
 
         self.login(self.user.email, '4P@$$w0rd!')

@@ -45,7 +45,7 @@
             {% endif %}
         {% endfor %}
         {% if user.custom_data['site_admin'] == True %}
-            <p><a href="{{ url_for('add_user') }}"><button class="btn btn-primary"><span class="btn-label icon fa fa-plus"></span>&nbsp;&nbsp;Add Team Member</button></a></p>
+            <p><a href="{{ url_for('accounts.add_user') }}"><button class="btn btn-primary"><span class="btn-label icon fa fa-plus"></span>&nbsp;&nbsp;Add Team Member</button></a></p>
         {% endif %}
     </div>
 </div>
