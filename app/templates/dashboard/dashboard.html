@@ -7,8 +7,13 @@
 <div class="panel colourable">
     <div class="panel-body text-center">
         <p>Get started by adding a new lead</p>
-        <button class="btn btn-flat btn-lg btn-labeled btn-success"><span class="btn-label icon fa fa-plus"></span>New Lead</button>
+        <a href="/newcontact"><button class="btn btn-flat btn-lg btn-labeled btn-success"><span class="btn-label icon fa fa-plus"></span>New Lead</button></a>
     </div>
 </div>
+
+{% for contact in contacts %}
+    <p>{{ contact.name }}</p>
+    <p>{{ contact.email }}</p>
+{% endfor %}
 
 {% endblock %}

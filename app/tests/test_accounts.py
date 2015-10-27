@@ -59,7 +59,7 @@ class TestAddUser(PhotogTestCase):
     """Test add user functionality"""
 
     def test_add_user_page_loads(self):
-        self.login(self.user.email, '4P@$$w0rd!')
+        self.login(self.user.email, self.test_password)
 
         # ensure page loads properly
         resp = self.client.get('/add_user')
@@ -67,8 +67,8 @@ class TestAddUser(PhotogTestCase):
 
     @mock.patch('app.accounts.views.sendgrid.SendGridClient.send')
     def test_add_user_bad_input(self, mocked_send):
-        
-        self.login(self.user.email, '4P@$$w0rd!')
+
+        self.login(self.user.email, self.test_password)
 
         # set sendgrid method to none
         mocked_send.return_value = None
@@ -83,11 +83,11 @@ class TestAddUser(PhotogTestCase):
     @mock.patch('app.accounts.views.sendgrid.SendGridClient.send')
     def test_add_user_valid_input(self, mocked_send):
 
-        self.login(self.user.email, '4P@$$w0rd!')
-        
+        self.login(self.user.email, self.test_password)
+
         # set sendgrid method to none
         mocked_send.return_value = None
-        
+
         # submit add_user page
         resp = self.client.post('/add_user', data={
                 'email': 'joe@hotmail.com'

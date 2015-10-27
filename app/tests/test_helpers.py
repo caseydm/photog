@@ -29,6 +29,7 @@ class PhotogTestCase(TestCase):
         self.application = self.sp_client.applications.get(href)
 
         self.test_email = 'test_user@photog.com'
+        self.test_password = '4P@$$w0rd!'
 
         self.user = self.create_default_user()
 
@@ -65,7 +66,6 @@ class PhotogTestCase(TestCase):
         return token
 
     def create_default_user(self):
-        #user = self.application.accounts.create({
         user = self.application.accounts.create({
             'given_name': 'anonymous',
             'surname': 'anonymous',
@@ -78,7 +78,7 @@ class PhotogTestCase(TestCase):
         })
 
         directory = self.application.default_account_store_mapping.account_store
-        
+
         tenant_group = directory.groups.create({
             'name': 'cf336120-25ef-4b01-8bb1-ba2b69213b71',
             'description': 'test_user2@example.com',
