@@ -40,6 +40,7 @@ def new_contact():
         new_contact = Contact(
             form.name.data,
             form.email.data,
+            form.phone.data,
             user.get_id(),
             user.custom_data['tenant_id']
         )

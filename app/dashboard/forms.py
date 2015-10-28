@@ -8,4 +8,5 @@ class AddContactForm(Form):
     Add a contact
     """
     name = StringField('Name:', validators=[InputRequired()])
-    email = StringField('Email:', validators=[InputRequired()])
+    email = StringField('Email:')
+    phone = StringField('Phone:')

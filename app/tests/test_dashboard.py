@@ -33,6 +33,7 @@ class TestAddContact(PhotogTestCase):
         # Return error with bad data
         resp = self.client.post('/newcontact', data={
                 'name': 'Roger',
-                'email': 'test@hotmail.com'
+                'email': 'test@hotmail.com',
+                'phone': '723-234-2343'
             }, follow_redirects=True)
         assert 'Dashboard' in resp.data
