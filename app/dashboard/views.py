@@ -4,6 +4,7 @@ from . import dashboard
 from .forms import AddContactForm
 from .models import Contact
 from app import db
+from app import stormpath_manager
 
 
 # dashboard home
@@ -48,3 +49,19 @@ def new_contact():
         db.session.commit()
         return redirect(url_for('dashboard.dashboard_home'))
     return render_template('dashboard/add_contact.html', form=form)
+
+
+# contact detail
+@dashboard.route('/contact/<contact_id>')
+@login_required
+def contact_detail(contact_id):
+    contact = Contact.query.filter_by(
+        id=contact_id, tenant_id=user.custom_data['tenant_id']).first()
+    return render_template('dashboard/contact_detail.html', contact=contact)
+
+
+@dashboard.context_processor
+def utility_processor():
+    def get_user(user_id):
+        return stormpath_manager.client.accounts.get(user_id)
+    return dict(get_user=get_user)

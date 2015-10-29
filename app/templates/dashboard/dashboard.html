@@ -12,9 +12,10 @@
 </div>
 
 {% for contact in contacts %}
-    <p>{{ contact.name }}</p>
+    <p><a href="{{ url_for('dashboard.contact_detail', contact_id=contact.id) }}">{{ contact.name }}</a></p>
     <p>{{ contact.email }}</p>
     <p>{{ contact.phone }}</p>
+    <p>Submitted by: {{ get_user(contact.user_id).email }}</p>
 {% endfor %}
 
 {% endblock %}
