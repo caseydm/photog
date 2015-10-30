@@ -11,11 +11,43 @@
     </div>
 </div>
 
-{% for contact in contacts %}
-    <p><a href="{{ url_for('dashboard.contact_detail', contact_id=contact.id) }}">{{ contact.name }}</a></p>
-    <p>{{ contact.email }}</p>
-    <p>{{ contact.phone }}</p>
-    <p>Submitted by: {{ get_user(contact.user_id).email }}</p>
-{% endfor %}
+<div class="panel panel-dark panel-light-green">
+    <div class="panel-heading">
+        <span class="panel-title"><i class="panel-title-icon fa fa-smile-o"></i>Fresh Leads</span>
+        <div class="panel-heading-controls">
+            <ul class="pagination pagination-xs">
+                <li><a href="#">«</a></li>
+                <li class="active"><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">»</a></li>
+            </ul> <!-- / .pagination -->
+        </div> <!-- / .panel-heading-controls -->
+    </div> <!-- / .panel-heading -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Submitted By</th>
+                <th>Date Added</th>
+            </tr>
+        </thead>
+        <tbody class="valign-middle">
+        {% for contact in contacts %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('dashboard.contact_detail', contact_id=contact.id) }}">{{ contact.name }}</a>
+                </td>
+                <td>{{ contact.email }}</td>
+                <td>{{ contact.phone }}</td>
+                <td>{{ get_user(contact.user_id).email }}</td>
+                <td>{{ contact.created_date }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}

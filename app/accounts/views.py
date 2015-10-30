@@ -15,21 +15,6 @@ from itsdangerous import URLSafeTimedSerializer
 from sendgrid import SendGridClientError, SendGridServerError
 from . import accounts
 
-################
-# static pages #
-################
-
-
-# index
-@accounts.route('/')
-@login_required
-def index():
-    return render_template('dashboard/dashboard.html')
-
-
-###################
-# accounts #
-###################
 
 # register
 @accounts.route('/register', methods=['GET', 'POST'])

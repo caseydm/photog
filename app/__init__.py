@@ -20,5 +20,7 @@ def create_app(config_name):
     app.register_blueprint(accounts_blueprint)
     from .dashboard import dashboard as dashboard_blueprint
     app.register_blueprint(dashboard_blueprint)
+    from .public import public as public_blueprint
+    app.register_blueprint(public_blueprint)
 
     return app
