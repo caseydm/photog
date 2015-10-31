@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
 from wtforms.fields import PasswordField, StringField
-from wtforms.validators import InputRequired, ValidationError, EqualTo
+from wtforms.validators import InputRequired, EqualTo
 
 
 class RegistrationForm(Form):
@@ -13,14 +13,6 @@ class RegistrationForm(Form):
         EqualTo('password_again', message='Passwords must match')
     ])
     password_again = PasswordField('Password (again)')
-
-    def validate_password_again(self, field):
-        """
-        Ensure both password fields match, otherwise raise a ValidationError.
-        :raises: ValidationError if passwords don't match.
-        """
-        if self.password.data != field.data:
-            raise ValidationError("Passwords don't match.")
 
 
 class AddUserForm(Form):

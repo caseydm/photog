@@ -31,14 +31,18 @@
               </div>
             {% endif %}
         {% endwith %}
-         {% for error in form.password.errors %}
-            <div class="alert alert-danger">{{ error }}</div>
-          {% endfor %}
         <div class="form-group">
             {{ form.email(class='form-control input-lg', placeholder='Email', required='true', type='email') }}
+            {% for error in form.email.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
         </div>
         <div class="form-group">
             {{ form.password(class='form-control input-lg', placeholder='Password', required='true', type='password') }}
+            {% for error in form.password.errors %}
+                <div class="jquery-validate-error help-block has-error">{{ error }}</div>
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
         </div>
         <div class="form-group">
             {{ form.password_again(class='form-control input-lg', placeholder='Password (again)', required='true') }}
