@@ -1,4 +1,4 @@
-# project/views.py
+# app/accounts/views.py
 
 import uuid
 import sendgrid
@@ -16,7 +16,6 @@ from sendgrid import SendGridClientError, SendGridServerError
 from . import accounts
 
 
-# register
 @accounts.route('/register', methods=['GET', 'POST'])
 def register():
     """
