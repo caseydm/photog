@@ -27,7 +27,7 @@ class TestRegister(PhotogTestCase):
             'password': 'TempPass123',
             'password_again': 'TempPass123',
             })
-        assert 'Register for an Account' in resp.data
+        assert 'Email field is required' in resp.data
 
     def test_register_valid_input(self):
         # Valid data results in success
