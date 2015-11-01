@@ -15,11 +15,11 @@ class TestRegister(PhotogTestCase):
     def test_register_bad_input(self):
         # Ensure that no password results in error
         resp = self.client.post('/register', data={
-            'email': 'testuser@photog.com',
+            'email': self.test_email,
             'password': '',
             'password_again': '',
             })
-        assert 'Register for an Account' in resp.data
+        assert 'Password field is required' in resp.data
 
         # Ensure that no email address results in error
         resp = self.client.post('/register', data={

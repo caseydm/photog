@@ -31,9 +31,15 @@
               </div>
             {% endif %}
         {% endwith %}
-         {% for error in form.password.errors %}
-            <div class="alert alert-danger">{{ error }}</div>
-          {% endfor %}
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+                    {% for error in field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% endif %}
         <div class="form-group">
             {{ form.email(class='form-control input-lg', placeholder='Email', required='true', type='email') }}
         </div>
