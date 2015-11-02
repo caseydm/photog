@@ -6,7 +6,7 @@ operations.
 
 from os import environ
 from unittest import TestCase
-from app import create_app
+from app import create_app, db
 from stormpath.client import Client
 from itsdangerous import URLSafeTimedSerializer
 from flask import current_app
@@ -16,6 +16,7 @@ class PhotogTestCase(TestCase):
 
     def setUp(self):
         self.app = create_app('testing')
+        db.create_all()
         self.client = self.app.test_client()
 
         # stormpath client
@@ -37,6 +38,9 @@ class PhotogTestCase(TestCase):
         self.user.delete()
         group = self.get_test_user_group('test_user2@example.com')
         group.delete()
+
+        db.session.remove()
+        db.drop_all()
 
     def login(self, email, password):
         return self.client.post('/login', data=dict(
