@@ -10,3 +10,10 @@ class AddContactForm(Form):
     name = StringField('Name:', validators=[InputRequired()])
     email = StringField('Email:')
     phone = StringField('Phone:')
+
+
+class AddNoteForm(Form):
+    """
+    Add a note to a contact
+    """
+    content = StringField('Content:', validators=[InputRequired()])

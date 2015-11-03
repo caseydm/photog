@@ -1,8 +1,8 @@
 from flask import render_template, redirect, url_for
-from flask.ext.stormpath import login_required, user
+from flask.ext.stormpath import login_required, groups_required, user
 from . import dashboard
-from .forms import AddContactForm
-from .models import Contact
+from .forms import AddContactForm, AddNoteForm
+from .models import Contact, Note
 from app import db
 from app import stormpath_manager
 
@@ -52,12 +52,32 @@ def new_contact():
 
 
 # contact detail
-@dashboard.route('/contact/<contact_id>')
+@dashboard.route('/contact/<contact_id>', methods=['GET', 'POST'])
 @login_required
 def contact_detail(contact_id):
+    form = AddNoteForm()
+
     contact = Contact.query.filter_by(
-        id=contact_id, tenant_id=user.custom_data['tenant_id']).first()
-    return render_template('dashboard/contact_detail.html', contact=contact)
+        id=contact_id, tenant_id=user.custom_data['tenant_id']).first_or_404()
+    notes = contact.notes
+
+    if form.validate_on_submit():
+        new_note = Note(
+            form.content.data,
+            user.get_id(),
+            user.custom_data['tenant_id'],
+            contact.id
+        )
+        db.session.add(new_note)
+        db.session.commit()
+        return redirect(url_for('dashboard.contact_detail', contact_id=contact.id))
+
+    return render_template(
+        'dashboard/contact_detail.html',
+        contact=contact,
+        notes=notes,
+        form=form
+        )
 
 
 @dashboard.context_processor
