@@ -12,7 +12,7 @@ from app import stormpath_manager
 @login_required
 def dashboard_home():
     contacts = db.session.query(Contact).filter_by(
-         tenant_id=user.custom_data['tenant_id']).order_by(Contact.name.asc())
+         tenant_id=user.custom_data['tenant_id']).order_by(Contact.created_date.desc())
     return render_template('dashboard/dashboard.html', user=user, contacts=contacts)
 
 
