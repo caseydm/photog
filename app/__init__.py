@@ -6,6 +6,8 @@ from config import config
 stormpath_manager = StormpathManager()
 db = SQLAlchemy()
 
+from .dashboard.utils import pretty_date
+
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -22,5 +24,7 @@ def create_app(config_name):
     app.register_blueprint(dashboard_blueprint)
     from .public import public as public_blueprint
     app.register_blueprint(public_blueprint)
+
+    app.jinja_env.filters['pretty_date'] = pretty_date
 
     return app

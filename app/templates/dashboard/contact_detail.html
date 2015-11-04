@@ -12,7 +12,7 @@
 <b>Notes</b>
 {% for note in notes %}
     <p>{{ note.content }}</p>
-    <p>Added by {{ get_user(note.created_by).email }} on {{ note.created_date }}</p>
+    <p>Added by {{ get_user(note.created_by).email }} {{ note.created_date|pretty_date }}</p>
 {% endfor %}
 
 <form class="panel form-horizontal" method="post">
