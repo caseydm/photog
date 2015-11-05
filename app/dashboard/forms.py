@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms.fields import StringField
+from wtforms.fields import StringField, TextField
 from wtforms.validators import InputRequired
 
 
@@ -16,4 +16,4 @@ class AddNoteForm(Form):
     """
     Add a note to a contact
     """
-    content = StringField('Content:', validators=[InputRequired()])
+    content = TextField('Content:', validators=[InputRequired()])
