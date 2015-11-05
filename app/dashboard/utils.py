@@ -7,7 +7,7 @@ def pretty_date(time=False):
     pretty string like 'an hour ago', 'Yesterday', '3 months ago',
     'just now', etc
     """
-    now = datetime.utcnow()
+    now = datetime.now()
     if type(time) is int:
         diff = now - datetime.fromtimestamp(time)
     elif isinstance(time, datetime):
