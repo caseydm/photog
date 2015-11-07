@@ -16,7 +16,16 @@ class PhotogTestCase(TestCase):
 
     def setUp(self):
         self.app = create_app('testing')
+
+        # app context
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+
+        # drop database in case it exissts, and create new version
+        db.drop_all()
         db.create_all()
+
+        # test client
         self.client = self.app.test_client()
 
         # stormpath client
@@ -41,6 +50,7 @@ class PhotogTestCase(TestCase):
 
         db.session.remove()
         db.drop_all()
+        self.app_context.pop()
 
     def login(self, email, password):
         return self.client.post('/login', data=dict(

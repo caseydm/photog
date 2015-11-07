@@ -43,7 +43,6 @@ class TestAddContact(PhotogTestCase):
         db.session.add(new_contact)
         db.session.commit()
         resp = self.client.get('/dashboard', follow_redirects=True)
-        print resp.data
         assert 'Roger' in resp.data
         assert 'roger@hotmail.com' in resp.data
         assert '234-234-2343'
