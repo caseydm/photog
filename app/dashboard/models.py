@@ -9,8 +9,9 @@ class Contact(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    email = db.Column(db.String, nullable=False)
-    phone = db.Column(db.String, nullable=False)
+    email = db.Column(db.String)
+    phone = db.Column(db.String)
+    comment = db.Column(db.Text)
     created_date = db.Column(db.DateTime(), default=datetime.utcnow)
     user_id = db.Column(db.String, nullable=False)
     tenant_id = db.Column(db.String, nullable=False)
