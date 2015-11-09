@@ -44,19 +44,13 @@
         <div class="row form-group">
             <label class="col-sm-2 control-label">Lead Source</label>
             <div class="col-sm-3">
-                <select class="form-control form-group-margin">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                </select>
+                {{ form.lead_source(class='form-control', placeholder='') }}
             </div>
         </div>
           <div class="row form-group">
             <label class="col-sm-2 control-label">Note</label>
             <div class="col-sm-5">
-                <textarea class="form-control" rows="3"></textarea>
+                {{ form.comment(class='form-control', placeholder='') }}
             </div>
         </div>
     <div class="form-group" style="margin-bottom: 0;">

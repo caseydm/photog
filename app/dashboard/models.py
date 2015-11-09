@@ -18,10 +18,12 @@ class Contact(db.Model):
     tenant_id = db.Column(db.String, nullable=False)
     notes = db.relationship('Note', backref='Contact', cascade='all, delete-orphan')
 
-    def __init__(self, name, email, phone, user_id, tenant_id):
+    def __init__(self, name, email, phone, comment, lead_source, user_id, tenant_id):
         self.name = name
         self.email = email
         self.phone = phone
+        self.comment = comment
+        self.lead_source = lead_source
         self.user_id = user_id
         self.tenant_id = tenant_id
 

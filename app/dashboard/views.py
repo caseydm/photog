@@ -42,6 +42,8 @@ def new_contact():
             form.name.data,
             form.email.data,
             form.phone.data,
+            form.comment.data,
+            form.lead_source.data,
             user.get_id(),
             user.custom_data['tenant_id']
         )
