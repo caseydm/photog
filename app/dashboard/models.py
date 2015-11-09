@@ -12,6 +12,7 @@ class Contact(db.Model):
     email = db.Column(db.String)
     phone = db.Column(db.String)
     comment = db.Column(db.Text)
+    lead_source = db.Column(db.String)
     created_date = db.Column(db.DateTime(), default=datetime.utcnow)
     user_id = db.Column(db.String, nullable=False)
     tenant_id = db.Column(db.String, nullable=False)
