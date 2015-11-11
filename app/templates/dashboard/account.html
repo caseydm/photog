@@ -2,6 +2,19 @@
 
 {% block title %}Profile - {{ user.email }}{% endblock %}
 
+{% block head %}
+<style>
+.hidden { display: none; }
+</style>
+<script>
+$(document).ready(function(){
+    $("#namelink").click(function(){
+        $('form').removeClass('hidden');
+    });
+});
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="page-header">
     <h1>Account</h1>
@@ -12,19 +25,20 @@
         <span class="panel-title">Profile</span>
     </div>
     <div class="panel-body">
-        <p><b>Email: </b> {{ user.email }}</p>
         <p><b>Name: </b>
         {% if user.given_name != 'Anonymous' %}
-            {{ user.given_name }}</p>
+            {{ user.given_name }} <a href="#" id="namelink">(edit)</a></p>
         {% else %}
-        <form class="form-inline" method="post">
+            <a href="#" id="namelink">Set name</a></p>
+        {% endif %}
+        <form class="form-inline hidden" method="post">
             <div class="form-group">
                 <label class="sr-only" for="exampleInputEmail2">Name</label>
                 <input class="form-control" name="name" id="name" placeholder="First Name">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
-        {% endif %}
+        <p><b>Email: </b> {{ user.email }}</p>
         <p><a href="/forgot">Reset Password</a></p> 
     </div>
 </div>
