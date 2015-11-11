@@ -37,6 +37,8 @@ class TestAddContact(PhotogTestCase):
             'Roger',
             'roger@hotmail.com',
             '234-234-2343',
+            'wants a photo session',
+            'Web Site',
             self.user.href,
             self.user.custom_data['tenant_id']
         )
