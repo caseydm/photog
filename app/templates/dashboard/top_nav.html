@@ -27,7 +27,13 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle user-menu" data-toggle="dropdown">
                                     <img src="/static/img/avatars/1.jpg" alt="">
-                                    <span>{{ user.email }}</span>
+                                    <span>
+                                        {% if user.given_name == 'Anonymous' %}
+                                            {{ user.email }}
+                                        {% else %}
+                                            {{ user.given_name }}
+                                        {% endif %}
+                                    </span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a href="{{ url_for('dashboard.account') }}"><i class="dropdown-icon fa fa-cog"></i>&nbsp;&nbsp;Account</a></li>

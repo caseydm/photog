@@ -13,18 +13,18 @@
     </div>
     <div class="panel-body">
         <p><b>Email: </b> {{ user.email }}</p>
-        <p><a href="#">Set Name</a></p>
-        <form class="form-inline">
+        <p><b>Name: </b>
+        {% if user.given_name != 'Anonymous' %}
+            {{ user.given_name }}</p>
+        {% else %}
+        <form class="form-inline" method="post">
             <div class="form-group">
-                <label class="sr-only" for="exampleInputEmail2">First Name</label>
-                <input type="email" class="form-control" id="exampleInputEmail2" placeholder="First Name">
-            </div>
-            <div class="form-group">
-                <label class="sr-only" for="exampleInputPassword2">Last Name</label>
-                <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Last Name">
+                <label class="sr-only" for="exampleInputEmail2">Name</label>
+                <input class="form-control" name="name" id="name" placeholder="First Name">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+        {% endif %}
         <p><a href="/forgot">Reset Password</a></p> 
     </div>
 </div>

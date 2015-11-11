@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request
 from flask.ext.stormpath import login_required, groups_required, user
 from . import dashboard
 from .forms import AddContactForm, AddNoteForm
@@ -17,13 +17,16 @@ def dashboard_home():
 
 
 # profile
-@dashboard.route('/account/')
+@dashboard.route('/account/', methods=['GET', 'POST'])
 @login_required
 def account():
     # get group accounts
     group = user.groups.search({'name': user.custom_data['tenant_id']})
     group = group[0]
     accounts = group.accounts
+    if request.method == 'POST':
+        user.given_name = request.form['name']
+        user.save()
     return render_template(
         'dashboard/account.html',
         user=user,
