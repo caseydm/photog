@@ -3,23 +3,34 @@
 {% block title %}Contact Details{% endblock %}
 
 {% block content %}
-<b>Contact</b>
+<div class="panel colourable">
+    <div class="panel-heading">
+        <span class="panel-title"><i class="panel-title-icon fa fa-book"></i>Contact Details</span>
+    </div>
+    <div class="panel-body">
+        <p class="text-lg"><b>{{ contact.name }}</b></p>
+        <p><i class="fa fa-envelope" style="color: #888"></i> <a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>
+        <p><i class="fa fa-phone-square" style="color: #888"></i> {{ contact.phone }}</p>
+        {% if contact.lead_source %}
+            <p><b>Lead source:</b> {{ contact.lead_source }}</p>
+        {% endif %}
+        {% if contact.comment %}
+            <p><b>Comment:</b> {{ contact.comment }}</p>
+        {% endif %}
+    </div>
+</div>
 
-<p>{{ contact.name }}</p>
-<p>{{ contact.email }}</p>
-<p>{{ contact.phone }}</p>
-{% if contact.lead_source %}
-    <p>Lead source: {{ contact.lead_source }}</p>
-{% endif %}
-{% if contact.comment %}
-    <p>Initial note: {{ contact.comment }}</p>
-{% endif %}
-
-<b>Notes</b>
-{% for note in notes %}
-    <p>{{ note.content }}</p>
-    <p>Added by {{ get_user(note.created_by).email }} {{ note.created_date|pretty_date }}</p>
-{% endfor %}
+<div class="panel colourable">
+    <div class="panel-heading">
+        <span class="panel-title"><i class="panel-title-icon fa fa-star-o"></i>Activity</span>
+    </div>
+    <div class="panel-body">
+    {% for note in notes %}
+        <p>{{ note.content }}</p>
+        <p class="text-light-gray">Added by {{ get_user(note.created_by).email }} {{ note.created_date|pretty_date }}</p>
+    {% endfor %}
+    </div>
+</div>
 
 <form class="panel form-horizontal" method="post">
 {{ form.hidden_tag() }}
@@ -48,5 +59,7 @@
         </div>
     </div>
 </form>
+
+
 
 {% endblock %}

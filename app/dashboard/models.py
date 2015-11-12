@@ -16,7 +16,7 @@ class Contact(db.Model):
     created_date = db.Column(db.DateTime(), default=datetime.utcnow)
     user_id = db.Column(db.String, nullable=False)
     tenant_id = db.Column(db.String, nullable=False)
-    notes = db.relationship('Note', backref='Contact', cascade='all, delete-orphan')
+    notes = db.relationship('Note', backref='Contact', order_by='desc(Note.created_date)', cascade='all, delete-orphan')
 
     def __init__(self, name, email, phone, comment, lead_source, user_id, tenant_id):
         self.name = name
