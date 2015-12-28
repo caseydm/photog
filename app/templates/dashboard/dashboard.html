@@ -14,15 +14,6 @@
 <div class="panel panel-dark panel-light-green">
     <div class="panel-heading">
         <span class="panel-title"><i class="panel-title-icon fa fa-smile-o"></i>Fresh Leads</span>
-        <div class="panel-heading-controls">
-            <ul class="pagination pagination-xs">
-                <li><a href="#">«</a></li>
-                <li class="active"><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">»</a></li>
-            </ul> <!-- / .pagination -->
-        </div> <!-- / .panel-heading-controls -->
     </div> <!-- / .panel-heading -->
     <table class="table">
         <thead>
@@ -30,7 +21,6 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
-                <th>Submitted By</th>
                 <th>Added</th>
             </tr>
         </thead>
@@ -42,7 +32,6 @@
                 </td>
                 <td>{{ contact.email }}</td>
                 <td>{{ contact.phone }}</td>
-                <td>{{ get_user(contact.user_id).email }}</td>
                 <td>{{ contact.created_date|pretty_date }}</td>
             </tr>
         {% endfor %}
