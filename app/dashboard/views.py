@@ -56,6 +56,34 @@ def new_contact():
     return render_template('dashboard/add_contact.html', form=form)
 
 
+# edit contact
+@dashboard.route('/editcontact/<contact_id>', methods=['GET', 'POST'])
+@login_required
+def edit_contact(contact_id):
+    form = AddContactForm()
+
+    contact = Contact.query.filter_by(
+        id=contact_id, tenant_id=user.custom_data['tenant_id']).first_or_404()
+
+    if form.validate_on_submit():
+        contact.name = form.name.data
+        contact.email = form.email.data
+        contact.phone = form.phone.data
+        contact.lead_source = form.lead_source.data
+        contact.comment = form.comment.data
+
+        db.session.commit()
+        return redirect(url_for('dashboard.contact_detail', contact_id=contact.id))
+
+    form.name.data = contact.name
+    form.email.data = contact.email
+    form.phone.data = contact.phone
+    form.lead_source.data = contact.lead_source
+    form.comment.data = contact.comment
+
+    return render_template('dashboard/add_contact.html', form=form)
+
+
 # contact detail
 @dashboard.route('/contact/<contact_id>', methods=['GET', 'POST'])
 @login_required

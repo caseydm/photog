@@ -17,6 +17,8 @@
         {% if contact.comment %}
             <p><b>Comment:</b> {{ contact.comment }}</p>
         {% endif %}
+        <br>
+        <p><a href="{{ url_for('dashboard.edit_contact', contact_id=contact.id) }}">Edit</a> | Delete Contact</p>
     </div>
 </div>
 
