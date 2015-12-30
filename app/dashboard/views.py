@@ -53,7 +53,7 @@ def new_contact():
         db.session.add(new_contact)
         db.session.commit()
         return redirect(url_for('dashboard.dashboard_home'))
-    return render_template('dashboard/add_contact.html', form=form)
+    return render_template('dashboard/add_contact.html', action='Add', form=form)
 
 
 # edit contact
@@ -81,7 +81,7 @@ def edit_contact(contact_id):
     form.lead_source.data = contact.lead_source
     form.comment.data = contact.comment
 
-    return render_template('dashboard/add_contact.html', form=form)
+    return render_template('dashboard/add_contact.html', action='Edit', form=form)
 
 
 # contact detail
