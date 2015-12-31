@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, flash
 from flask.ext.stormpath import login_required, groups_required, user
 from . import dashboard
 from .forms import AddContactForm, AddNoteForm
@@ -34,7 +34,7 @@ def account():
     )
 
 
-# new contact
+# create contact
 @dashboard.route('/newcontact/', methods=['GET', 'POST'])
 @login_required
 def new_contact():
@@ -56,7 +56,7 @@ def new_contact():
     return render_template('dashboard/add_contact.html', action='Add', form=form)
 
 
-# edit contact
+# update contact
 @dashboard.route('/editcontact/<contact_id>', methods=['GET', 'POST'])
 @login_required
 def edit_contact(contact_id):
@@ -82,6 +82,19 @@ def edit_contact(contact_id):
     form.comment.data = contact.comment
 
     return render_template('dashboard/add_contact.html', action='Edit', form=form)
+
+
+# delete contact
+@dashboard.route('/contact/delete/<contact_id>', methods=['GET'])
+@login_required
+def delete_contact(contact_id):
+    contact = Contact.query.filter_by(
+        id=contact_id, tenant_id=user.custom_data['tenant_id']).first_or_404()
+
+    db.session.delete(contact)
+    db.session.commit()
+    flash('Contact deleted')
+    return redirect(url_for('dashboard.dashboard_home'))
 
 
 # contact detail
