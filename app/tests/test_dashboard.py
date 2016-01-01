@@ -10,20 +10,20 @@ class TestAddContact(PhotogTestCase):
         self.login(self.user.email, self.test_password)
 
         # Page loads with correct text
-        resp = self.client.get('/newcontact', follow_redirects=True)
+        resp = self.client.get('/contact/new', follow_redirects=True)
         assert 'Add Contact' in resp.data
 
     def test_add_contact_page_bad_data(self):
         self.login(self.user.email, self.test_password)
 
         # Return error with bad data
-        resp = self.client.post('/newcontact', data={
+        resp = self.client.post('/contact/new', data={
                 'name': '',
                 'email': 'test@hotmail.com'
             }, follow_redirects=True)
         assert 'Add Contact' in resp.data
 
-        resp = self.client.post('/newcontact', data={
+        resp = self.client.post('/contact/new', data={
                 'name': 'Joe',
                 'email': ''
             }, follow_redirects=True)

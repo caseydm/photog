@@ -36,7 +36,7 @@ def account():
 ### Contacts ###
 
 # create contact
-@dashboard.route('/newcontact/', methods=['GET', 'POST'])
+@dashboard.route('/contact/new', methods=['GET', 'POST'])
 @login_required
 def new_contact():
     form = AddContactForm()
