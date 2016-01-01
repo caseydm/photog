@@ -87,7 +87,7 @@ def contact_detail(contact_id):
 
 
 # update contact
-@dashboard.route('/editcontact/<contact_id>', methods=['GET', 'POST'])
+@dashboard.route('/contact/edit/<contact_id>', methods=['GET', 'POST'])
 @login_required
 def edit_contact(contact_id):
     form = AddContactForm()
