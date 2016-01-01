@@ -33,6 +33,7 @@ def account():
         accounts=accounts
     )
 
+### Contacts ###
 
 # create contact
 @dashboard.route('/newcontact/', methods=['GET', 'POST'])
@@ -54,6 +55,35 @@ def new_contact():
         db.session.commit()
         return redirect(url_for('dashboard.dashboard_home'))
     return render_template('dashboard/add_contact.html', action='Add', form=form)
+
+
+# read contact (detail)
+@dashboard.route('/contact/<contact_id>', methods=['GET', 'POST'])
+@login_required
+def contact_detail(contact_id):
+    form = AddNoteForm()
+
+    contact = Contact.query.filter_by(
+        id=contact_id, tenant_id=user.custom_data['tenant_id']).first_or_404()
+    notes = contact.notes
+
+    if form.validate_on_submit():
+        new_note = Note(
+            form.content.data,
+            user.get_id(),
+            user.custom_data['tenant_id'],
+            contact.id
+        )
+        db.session.add(new_note)
+        db.session.commit()
+        return redirect(url_for('dashboard.contact_detail', contact_id=contact.id))
+
+    return render_template(
+        'dashboard/contact_detail.html',
+        contact=contact,
+        notes=notes,
+        form=form
+        )
 
 
 # update contact
@@ -95,35 +125,6 @@ def delete_contact(contact_id):
     db.session.commit()
     flash('Contact deleted')
     return redirect(url_for('dashboard.dashboard_home'))
-
-
-# contact detail
-@dashboard.route('/contact/<contact_id>', methods=['GET', 'POST'])
-@login_required
-def contact_detail(contact_id):
-    form = AddNoteForm()
-
-    contact = Contact.query.filter_by(
-        id=contact_id, tenant_id=user.custom_data['tenant_id']).first_or_404()
-    notes = contact.notes
-
-    if form.validate_on_submit():
-        new_note = Note(
-            form.content.data,
-            user.get_id(),
-            user.custom_data['tenant_id'],
-            contact.id
-        )
-        db.session.add(new_note)
-        db.session.commit()
-        return redirect(url_for('dashboard.contact_detail', contact_id=contact.id))
-
-    return render_template(
-        'dashboard/contact_detail.html',
-        contact=contact,
-        notes=notes,
-        form=form
-        )
 
 
 @dashboard.context_processor
