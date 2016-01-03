@@ -35,6 +35,19 @@
 </head>
 
 <body class="theme-dust main-menu-animated">
+<script>
+var init = [];
+window.addEventListener("load", function () {
+  // Hide/show main menu
+  $('#demo-no-menu').on($('html').hasClass('ie8') ? "propertychange" : "change", function () {
+    if ($(this).is(':checked')) {
+      $('body').addClass('no-main-menu');
+    } else {
+      $('body').removeClass('no-main-menu');
+    }
+  });
+});
+</script>
     <div id="main-wrapper">
 
     {% include 'dashboard/top_nav.html' %}
@@ -49,8 +62,8 @@
     </div>
 
 <!-- LanderApp's javascripts -->
-<script src="/static/js/bootstrap.min.js"></script>
-<script src="/static/js/landerapp.min.js"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/landerapp.min.js') }}"></script>
 
 <script type="text/javascript">
     init.push(function () {

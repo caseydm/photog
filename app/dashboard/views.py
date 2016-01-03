@@ -123,7 +123,6 @@ def delete_contact(contact_id):
 
     db.session.delete(contact)
     db.session.commit()
-    flash('Contact deleted')
     return redirect(url_for('dashboard.dashboard_home'))
 
 

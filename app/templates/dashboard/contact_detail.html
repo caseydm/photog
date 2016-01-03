@@ -18,7 +18,24 @@
             <p><b>Comment:</b> {{ contact.comment }}</p>
         {% endif %}
         <br>
-        <p><a href="{{ url_for('dashboard.edit_contact', contact_id=contact.id) }}">Edit</a> | <a href="{{ url_for('dashboard.delete_contact', contact_id=contact.id) }}">Delete Contact</a></p>
+        <a href="{{ url_for('dashboard.edit_contact', contact_id=contact.id) }}"><button class="btn btn-info">Edit</button></a>&nbsp;&nbsp;
+        <!-- Danger -->
+            <div id="uidemo-modals-alerts-danger" class="modal modal-alert modal-danger fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <i class="fa fa-times-circle"></i>
+                        </div>
+                        <div class="modal-title">Are you sure?</div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn" data-dismiss="modal">Cancel</button>&nbsp;
+                             <a href="{{ url_for('dashboard.delete_contact', contact_id=contact.id) }}"><button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button></a>
+                        </div>
+                    </div> <!-- / .modal-content -->
+                </div> <!-- / .modal-dialog -->
+            </div> <!-- / .modal -->
+            <!-- / Danger -->
+           <button class="btn btn-danger" data-toggle="modal" data-target="#uidemo-modals-alerts-danger">Delete</button>
     </div>
 </div>
 
