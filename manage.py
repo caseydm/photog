@@ -24,5 +24,13 @@ def test():
     tests = unittest.TestLoader().discover('.')
     unittest.TextTestRunner(verbosity=2).run(tests)
 
+
+@manager.command
+def deploy():
+    """Run deployment tasks."""
+    from flask.ext.migrate import upgrade
+    # migrate database to latest revision
+    upgrade()
+
 if __name__ == '__main__':
     manager.run()
