@@ -4,4 +4,5 @@ __pycache__
 *.DS_Store
 instance
 project/templates/old
-project/templates/pages
+project/templates/pages.
+.env
