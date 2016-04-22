@@ -30,7 +30,9 @@
                 <td>
                     <a href="{{ url_for('dashboard.contact_detail', contact_id=contact.id) }}">{{ contact.name }}</a>
                 </td>
-                <td>{{ contact.email }}</td>
+                <td>
+                    <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
+                </td>
                 <td>{{ contact.phone }}</td>
                 <td>{{ contact.created_date|pretty_date }}</td>
             </tr>

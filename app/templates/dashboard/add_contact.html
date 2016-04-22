@@ -1,6 +1,6 @@
 {% extends 'dashboard/base.html' %}
 
-{% block title %}Add Contact{% endblock %}
+{% block title %}{{ action }} Contact{% endblock %}
 
 {% block content %}
 <div class="page-header">
@@ -19,7 +19,7 @@
         {% endif %}
     {% endwith %}
     <div class="panel-heading">
-        <span class="panel-title">{{ action }} Contact</span>
+        <span class="panel-title">Contact Details</span>
     </div>
     <div class="panel-body">
         <div class="row form-group">
