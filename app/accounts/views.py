@@ -5,7 +5,7 @@ import sendgrid
 from manage import app
 from app import stormpath_manager
 from flask import redirect, render_template, \
-    request, url_for, flash, abort
+    request, url_for, flash, abort, current_app
 from flask.ext.stormpath import login_required, \
     groups_required, user, User
 from stormpath.error import Error as StormpathError
@@ -67,7 +67,7 @@ def register():
             login_user(account, remember=True)
 
             # redirect to dashboard
-            redirect_url = app.config['STORMPATH_REDIRECT_URL']
+            redirect_url = current_app.config['STORMPATH_REDIRECT_URL']
             return redirect(redirect_url)
 
         except StormpathError as err:
@@ -91,7 +91,7 @@ def add_user():
     if form.validate_on_submit():
 
         # token serializer
-        ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+        ts = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
 
         email = request.form['email']
         tenant_id = user.custom_data['tenant_id']
@@ -108,7 +108,7 @@ def add_user():
         try:
             # sendgrid setup
             sg = sendgrid.SendGridClient(
-                app.config['SENDGRID_API_KEY'],
+                current_app.config['SENDGRID_API_KEY'],
                 raise_errors=True
             )
 
@@ -142,7 +142,7 @@ def add_user_confirm(token):
     form = RegistrationForm()
     decoded = None
     try:
-        ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+        ts = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
         decoded = ts.loads(token, max_age=86400)
         email = decoded[0]
     except:
