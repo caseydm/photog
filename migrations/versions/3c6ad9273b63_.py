@@ -23,6 +23,7 @@ def upgrade():
 
     op.add_column('contacts', sa.Column('date_added', sa.DateTime(), nullable=True))
     op.add_column('contacts', sa.Column('phone', sa.String(), nullable=False))
+    op.add_column('contacts', sa.Column('email', sa.String(), nullable=False))
     ### end Alembic commands ###
 
 
