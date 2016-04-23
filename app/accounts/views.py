@@ -2,7 +2,7 @@
 
 import uuid
 import sendgrid
-# from manage import app
+from manage import app
 from app import stormpath_manager
 from flask import redirect, render_template, \
     request, url_for, flash, abort
