@@ -21,7 +21,6 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
 
-    op.add_column('contacts', sa.Column('id', sa.Integer(), nullable=False))
     op.add_column('contacts', sa.Column('date_added', sa.DateTime(), nullable=True))
     op.add_column('contacts', sa.Column('phone', sa.String(), nullable=False))
     ### end Alembic commands ###
