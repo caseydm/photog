@@ -5906,7 +5906,7 @@ function mixin(a) {
             return a.addClass("freeze")
         }, LanderApp.MainMenu.prototype.turnOnAnimation = function(a) {
             return null == a && (a = !1), this.$body.addClass("main-menu-animated"), a && ($("#main-menu .navigation > li > a > .mm-text").addClass("no-animation"), $("#main-menu .navigation > .mm-dropdown > ul").addClass("no-animation"), $("#main-menu .menu-content").addClass("no-animation")), $("#main-menu .navigation > li > a > .mm-text").addClass("mmc-dropdown-delay animated fadeIn"), $("#main-menu .navigation > .mm-dropdown > ul").addClass("mmc-dropdown-delay 
-                Left"), $("#main-menu .menu-content").addClass("animated fadeIn"), $("#main-menu .navigation > .mm-dropdown > ul").addClass(this.$body.hasClass("main-menu-right") || this.$body.hasClass("right-to-left") && !this.$body.hasClass("main-menu-right") ? "fadeInRight" : "fadeInLeft")
+                Left"), $("#main-menu .navigation > .mm-dropdown > ul").addClass(this.$body.hasClass("main-menu-right") || this.$body.hasClass("right-to-left") && !this.$body.hasClass("main-menu-right") ? "fadeInRight" : "fadeInLeft")
         }, LanderApp.MainMenu.prototype.turnOffAnimation = function() {
             return this.$body.removeClass("main-menu-animated"), $("#main-menu .navigation > li > a > .mm-text").removeClass("mmc-dropdown-delay animated fadeIn"), $("#main-menu .menu-content").removeClass("animated fadeIn"), $("#main-menu .navigation > .mm-dropdown > ul").removeClass("mmc-dropdown-delay animated fadeInLeft fadeInRight")
         }, LanderApp.MainMenu.prototype._getMenuState = function() {
