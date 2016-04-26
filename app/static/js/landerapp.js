@@ -32,43 +32,43 @@ function Emitter(a) {
 }
 
 function mixin(a) {
-    for (var b in Emitter.prototype) a[b] = Emitter.prototype[b];
-    return a
-}(function() {
-    String.prototype.endsWith || (String.prototype.endsWith = function(a) {
-        return -1 !== this.indexOf(a, this.length - a.length)
-    }), String.prototype.trim || (String.prototype.trim = function() {
-        return this.replace(/^\s+|\s+$/g, "")
-    }), Array.prototype.indexOf || (Array.prototype.indexOf = function(a, b) {
-        var c, d, e;
-        if (void 0 === this || null === this) throw new TypeError('"this" is null or not defined');
-        for (d = this.length >>> 0, b = +b || 0, 1 / 0 === Math.abs(b) && (b = 0), 0 > b && (b += d, 0 > b && (b = 0)), c = e = b; d >= b ? d > e : e > d; c = d >= b ? ++e : --e)
-            if (this[c] === a) return c;
-        return -1
-    }), Function.prototype.bind || (Function.prototype.bind = function(a) {
-        var b, c, d, e;
-        if ("function" != typeof this) throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
-        return b = Array.prototype.slice.call(arguments, 1), e = this, d = function() {}, c = function() {
-            return e.apply(this instanceof d && a ? this : a, b.concat(Array.prototype.slice.call(arguments)))
-        }, d.prototype = this.prototype, c.prototype = new d, c
-    }), Object.keys || (Object.keys = function() {
-        "use strict";
-        var a, b, c;
-        return c = Object.prototype.hasOwnProperty, b = {
-                toString: null
-            }.propertyIsEnumerable("toString") ? !1 : !0, a = ["toString", "toLocaleString", "valueOf", "hasOwnProperty", "isPrototypeOf", "propertyIsEnumerable", "constructor"],
-            function(d) {
-                var e, f, g, h, i, j, k;
-                if ("object" != typeof d && ("function" != typeof d || null === d)) throw new TypeError("Object.keys called on non-object");
-                for (g = [], h = 0, j = d.length; j > h; h++) f = d[h], c.call(d, f) && g.push(f);
-                if (b)
-                    for (i = 0, k = a.length; k > i; i++) e = a[i], c.call(d, e) && g.push(e);
-                return g
-            }
-    }.call(this)), window.getScreenSize = function(a, b) {
-        return a.is(":visible") ? "small" : b.is(":visible") ? "tablet" : "desktop"
-    }
-}).call(this),
+        for (var b in Emitter.prototype) a[b] = Emitter.prototype[b];
+        return a
+    }(function() {
+        String.prototype.endsWith || (String.prototype.endsWith = function(a) {
+            return -1 !== this.indexOf(a, this.length - a.length)
+        }), String.prototype.trim || (String.prototype.trim = function() {
+            return this.replace(/^\s+|\s+$/g, "")
+        }), Array.prototype.indexOf || (Array.prototype.indexOf = function(a, b) {
+            var c, d, e;
+            if (void 0 === this || null === this) throw new TypeError('"this" is null or not defined');
+            for (d = this.length >>> 0, b = +b || 0, 1 / 0 === Math.abs(b) && (b = 0), 0 > b && (b += d, 0 > b && (b = 0)), c = e = b; d >= b ? d > e : e > d; c = d >= b ? ++e : --e)
+                if (this[c] === a) return c;
+            return -1
+        }), Function.prototype.bind || (Function.prototype.bind = function(a) {
+            var b, c, d, e;
+            if ("function" != typeof this) throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+            return b = Array.prototype.slice.call(arguments, 1), e = this, d = function() {}, c = function() {
+                return e.apply(this instanceof d && a ? this : a, b.concat(Array.prototype.slice.call(arguments)))
+            }, d.prototype = this.prototype, c.prototype = new d, c
+        }), Object.keys || (Object.keys = function() {
+            "use strict";
+            var a, b, c;
+            return c = Object.prototype.hasOwnProperty, b = {
+                    toString: null
+                }.propertyIsEnumerable("toString") ? !1 : !0, a = ["toString", "toLocaleString", "valueOf", "hasOwnProperty", "isPrototypeOf", "propertyIsEnumerable", "constructor"],
+                function(d) {
+                    var e, f, g, h, i, j, k;
+                    if ("object" != typeof d && ("function" != typeof d || null === d)) throw new TypeError("Object.keys called on non-object");
+                    for (g = [], h = 0, j = d.length; j > h; h++) f = d[h], c.call(d, f) && g.push(f);
+                    if (b)
+                        for (i = 0, k = a.length; k > i; i++) e = a[i], c.call(d, e) && g.push(e);
+                    return g
+                }
+        }.call(this)), window.getScreenSize = function(a, b) {
+            return a.is(":visible") ? "small" : b.is(":visible") ? "tablet" : "desktop"
+        }
+    }).call(this),
     function() {
         var a, b;
         b = {
@@ -5905,7 +5905,7 @@ function mixin(a) {
         }, LanderApp.MainMenu.prototype.freezeDropdown = function(a) {
             return a.addClass("freeze")
         }, LanderApp.MainMenu.prototype.turnOnAnimation = function(a) {
-            return null == a && (a = !1), this.$body.addClass("main-menu-animated"), a && ($("#main-menu .navigation > li > a > .mm-text").addClass("no-animation"), $("#main-menu .navigation > .mm-dropdown > ul").addClass("no-animation"), $("#main-menu .menu-content").addClass("no-animation")), $("#main-menu .navigation > li > a > .mm-text").addClass("mmc-dropdown-delay animated fadeIn"), $("#main-menu .navigation > .mm-dropdown > ul").addClass("mmc-dropdown-delay animated fadeInLeft"), $("#main-menu .menu-content").addClass("animated fadeIn"), $("#main-menu .navigation > .mm-dropdown > ul").addClass(this.$body.hasClass("main-menu-right") || this.$body.hasClass("right-to-left") && !this.$body.hasClass("main-menu-right") ? "fadeInRight" : "fadeInLeft")
+            return null == a && (a = !1), this.$body.addClass("main-menu-animated"), a && ($("#main-menu .navigation > li > a > .mm-text").addClass("no-animation"), $("#main-menu .navigation > .mm-dropdown > ul").addClass("no-animation"), $("#main-menu .menu-content").addClass("no-animation")), $("#main-menu .navigation > .mm-dropdown > ul").addClass("mmc-dropdown-delay animated fadeInLeft"), $("#main-menu .menu-content").addClass("animated fadeIn"), $("#main-menu .navigation > .mm-dropdown > ul").addClass(this.$body.hasClass("main-menu-right") || this.$body.hasClass("right-to-left") && !this.$body.hasClass("main-menu-right") ? "fadeInRight" : "fadeInLeft")
         }, LanderApp.MainMenu.prototype.turnOffAnimation = function() {
             return this.$body.removeClass("main-menu-animated"), $("#main-menu .navigation > li > a > .mm-text").removeClass("mmc-dropdown-delay animated fadeIn"), $("#main-menu .menu-content").removeClass("animated fadeIn"), $("#main-menu .navigation > .mm-dropdown > ul").removeClass("mmc-dropdown-delay animated fadeInLeft fadeInRight")
         }, LanderApp.MainMenu.prototype._getMenuState = function() {
@@ -7044,8 +7044,7 @@ function mixin(a) {
                         if (12 === this.hour) return this.hour--, this.toggleMeridian();
                         if (0 === this.hour) return this.hour = 11, this.toggleMeridian();
                         this.hour--
-                    }
-                else this.hour <= 0 ? this.hour = 23 : this.hour--
+                    } else this.hour <= 0 ? this.hour = 23 : this.hour--
             },
             decrementMinute: function(a) {
                 var b;
@@ -15479,7 +15478,7 @@ function mixin(a) {
             }
 
             function F(a, b, d) {
-                for (var e = -1, f = 0, g = a.length; g > f; f++) a[f] == b ? e = f : a[f] > b && a[f]--; - 1 != e && d === c && a.splice(e, 1)
+                for (var e = -1, f = 0, g = a.length; g > f; f++) a[f] == b ? e = f : a[f] > b && a[f] --; - 1 != e && d === c && a.splice(e, 1)
             }
 
             function G(a, b, d, e) {
@@ -19900,8 +19899,7 @@ function mixin(a) {
                                 var m = c(l, !0),
                                     n = c(k, !1);
                                 a = m.cont, d = m.offset, e = n.cont, f = n.offset
-                            }
-                        else 2 === arguments.length && (e = a, f = d);
+                            } else 2 === arguments.length && (e = a, f = d);
                         return new h(a, d, e, f)
                     },
                     createFromNode: function(a) {
@@ -21077,7 +21075,7 @@ function mixin(a) {
                     }
                     var f = "[*+-]|\\d+\\.",
                         g = /[*+-]/,
-                        h = new RegExp("^( {0,3})(" + f + ")[   ]+"),
+                        h = new RegExp("^( {0,3})(" + f + ")[ 	]+"),
                         i = "(?: {0,3}\\t| {4})";
                     return function(f, i) {
                         function j(a) {
@@ -24198,16 +24196,16 @@ var toMarkdown = function(a) {
                                     }) : (j = i = x / 2, k = {
                                         fill: t.stroke,
                                         stroke: "none"
-                                    }), d._.arrows ? f ? (d._.arrows.endPath && p[d._.arrows.endPath]--, d._.arrows.endMarker && p[d._.arrows.endMarker]--) : (d._.arrows.startPath && p[d._.arrows.startPath]--, d._.arrows.startMarker && p[d._.arrows.startMarker]--) : d._.arrows = {}, "none" != w) {
+                                    }), d._.arrows ? f ? (d._.arrows.endPath && p[d._.arrows.endPath] --, d._.arrows.endMarker && p[d._.arrows.endMarker] --) : (d._.arrows.startPath && p[d._.arrows.startPath] --, d._.arrows.startMarker && p[d._.arrows.startMarker] --) : d._.arrows = {}, "none" != w) {
                                     var A = "raphael-marker-" + w,
                                         B = "raphael-marker-" + r + w + x + y;
-                                    c._g.doc.getElementById(A) ? p[A]++ : (n.defs.appendChild(q(q("path"), {
+                                    c._g.doc.getElementById(A) ? p[A] ++ : (n.defs.appendChild(q(q("path"), {
                                         "stroke-linecap": "round",
                                         d: o[w],
                                         id: A
                                     })), p[A] = 1);
                                     var C, D = c._g.doc.getElementById(B);
-                                    D ? (p[B]++, C = D.getElementsByTagName("use")[0]) : (D = q(q("marker"), {
+                                    D ? (p[B] ++, C = D.getElementsByTagName("use")[0]) : (D = q(q("marker"), {
                                         id: B,
                                         markerHeight: y,
                                         markerWidth: x,
