@@ -12,7 +12,7 @@
         <p><i class="fa fa-envelope" style="color: #888"></i> <a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>
         <p><i class="fa fa-phone-square" style="color: #888"></i> {{ contact.phone }}</p>
         {% if contact.lead_source %}
-            <p><b>Lead source 2:</b> {{ contact.lead_source }}</p>
+            <p><b>Lead source:</b> {{ contact.lead_source }}</p>
         {% endif %}
         {% if contact.comment %}
             <p><b>Comment:</b> {{ contact.comment }}</p>
